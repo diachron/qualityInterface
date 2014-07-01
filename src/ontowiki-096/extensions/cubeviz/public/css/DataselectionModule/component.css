@@ -1,0 +1,29 @@
+.cubeviz-component-box 
+{
+    clear:               both;
+    padding-top:          5px;
+    height:              auto;
+    display:            block;
+}
+
+#cubviz-component-container
+{
+    clear:    both;
+    display: block;
+}
+
+.cubeviz-legend-componentDimensionInfoList
+{
+    list-style-type: none;
+}
+
+.cubeviz-component-dimensionLabel
+{
+    font-size: 13.5px;
+}
+
+.cubeviz-component-selectedElementsBlock
+{
+    color: #696969; 
+    font-size: 11px;
+}

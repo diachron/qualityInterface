@@ -1,0 +1,684 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owconfig: <http://ns.ontowiki.net/SysOnt/ExtensionConfig/> .
+@prefix extension: <http://ns.ontowiki.net/Extensions/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix : <https://github.com/AKSW/cubeviz/raw/master/doap.n3#> .
+
+<> foaf:primaryTopic :cubeviz .
+:cubeviz a doap:Project ;
+
+  doap:release :v1-0 ;
+  doap:description "" ;
+  doap:name "CubeViz" ;
+  rdfs:label "CubeViz" ;
+
+  owconfig:authorLabel "Michael Martin" ;
+  owconfig:authorLabel "Konrad Abicht" ;
+  owconfig:enabled "true"^^xsd:boolean ;
+  owconfig:hasModule :Default ;
+  owconfig:privateNamespace <https://github.com/AKSW/cubeviz/raw/master/doap.n3#> ;
+  owconfig:templates "public/templates" ;
+  owconfig:languages "languages/" ;
+  
+  owconfig:config :AnalyzeActionConfig ;
+  
+  :context "production"^^xsd:string ;
+  
+  # If number of result entries is higher as this number, no TitleHelper will be used
+  :titleHelperLimit "1000"^^xsd:integer ;
+  
+  # Limit the number of dimension elements to this number. Affects the number of 
+  # possible observation! The lower the better the performance.
+  :dimensionElementLimit "100"^^xsd:integer ;
+  
+  #
+  # Activate / deactivate certain functionalities
+  #     true  = activated
+  #     false = deactivated
+  #
+  :useAnalyzeTool "true"^^xsd:boolean ;
+  :showAnalyzeToolDataSets "true"^^xsd:boolean ;
+  :useExport "true"^^xsd:boolean ;
+  
+  #
+  # Adapt user interface
+  #     true  = activated
+  #     false = deactivated
+  #
+  
+  # If true, replace model label by data set label
+  :uiUseDataSetInsteadOfModel "true"^^xsd:boolean .
+
+:Default a owconfig:Module ;
+
+  rdfs:label "Default" ;
+
+  owconfig:caching "true"^^xsd:boolean ;
+  owconfig:priority "1" ;
+  owconfig:context "main.sidewindows" .
+
+:v1-0 a doap:Version ;
+  doap:revision "1.0" .
+
+#
+# Analyze Action - Configuration
+#
+# This page provides an overview about the DataCube information in a selected
+# DataCube. The following stuff gives you the possibility to change / add / remove
+# existing queries to the Store and their representation in the frontend.
+#
+:AnalyzeActionConfig a owconfig:Config; owconfig:id "AnalyzeActionConfig";
+
+    #
+    # Each entry is structured as an entry of an associative array
+    # Its purpose is to collect general information about a DataCube
+    # 
+    #   icon    -   Name of the file with extension.
+    #
+    #   label   -   Its not to label itself, but a tag which has a translation
+    #               associated language file.
+    #
+    #   query   -   The query can ask for everything, in the end, only the number 
+    #               of elements (?element) will be used.
+    #
+    owconfig:config [ a owconfig:Config; owconfig:id "generalInformation";
+        
+        #
+        # Data Structure Definitions
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Data Structure Definitions" ;
+            :icon "" ;
+            :label "AnalyzeAction_DataStructureDefinitions" ;
+            :query "SELECT DISTINCT ?element WHERE {
+                ?element <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/linked-data/cube#DataStructureDefinition>. 
+            }"
+        ];
+        
+        #
+        # Data Sets
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Data Sets" ;
+            :icon "dataset2.png" ;
+            :label "AnalyzeAction_DataSets" ;
+            :query "SELECT DISTINCT ?element WHERE {
+                ?element <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/linked-data/cube#DataSet>. 
+            }"
+        ];
+        
+        #
+        # Dimensions
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Dimensions" ;
+            :icon "dimension.png" ;
+            :label "AnalyzeAction_Dimensions" ;
+            :query "SELECT DISTINCT ?element WHERE {
+                ?element <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/linked-data/cube#ComponentSpecification>.
+                ?element <http://purl.org/linked-data/cube#dimension> ?comptype.
+            }"
+        ];
+        
+        #
+        # Measures
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Measure Properties" ;
+            :icon "measure2.png" ;
+            :label "AnalyzeAction_MeasureProperties" ;
+            :query "SELECT DISTINCT ?element WHERE {
+                ?element <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/linked-data/cube#ComponentSpecification>.
+                ?element <http://purl.org/linked-data/cube#measure> ?comptype.
+            }"
+        ];
+        
+        #
+        # Attributes
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Attribute Properties" ;
+            :icon "attribute2.png" ;
+            :label "AnalyzeAction_AttributeProperties" ;
+            :query "SELECT DISTINCT ?element WHERE {
+                ?element <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/linked-data/cube#ComponentSpecification>.
+                ?element <http://purl.org/linked-data/cube#attribute> ?comptype.
+            }"
+        ];
+        
+        #
+        # Observations
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Observations" ;
+            :icon "observation.png" ;
+            :label "AnalyzeAction_Observations" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                SELECT DISTINCT ?element
+                WHERE { 
+                    ?element a qb:Observation . 
+                    ?element qb:dataSet ?dataset . 
+                    ?element ?dimension ?dimelement . 
+                    ?element ?measure ?value . 
+                    ?dataset a qb:DataSet . 
+                    ?dataset qb:structure ?datastructuredefintion . 
+                    ?dimensionspecification a qb:ComponentSpecification . 
+                    ?dimensionpecification qb:dimension ?dimension . 
+                    ?measurespecification a qb:ComponentSpecification . 
+                    ?measurespecification qb:measure ?measure . 
+                }"
+        ];
+        
+        #
+        # Slices
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Slices" ;
+            :icon "observation.png" ;
+            :label "AnalyzeAction_Slices" ;
+            :query "SELECT DISTINCT ?element
+                WHERE {{
+                    ?element <http://purl.org/linked-data/cube#sliceStructure> ?sliceKey .
+                } UNION {
+                    ?dataSet <http://purl.org/linked-data/cube#Slice> ?element .
+                }}"
+        ]
+    ];
+    
+    #
+    # http://www.w3.org/TR/vocab-data-cube/#wf
+    #
+    # There are 21 checks for a valid DataCube. All of them are listed below. 
+    # Each entry-description is plain copied from http://www.w3.org/TR/vocab-data-cube/#wf-rules!
+    #
+    #   label       -   Tag for the label, used for translation
+    #   descrption  -   Tag for the description, used for translation
+    #
+    owconfig:config [ a owconfig:Config; owconfig:id "integrityConstraints";
+        
+        #
+        # Unique DataSet
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Unique DataSet" ;
+            :shortLabel "IC-1" ;
+            :label "AnalyzeAction_UniqueDataSet" ;
+            :description "AnalyzeAction_UniqueDataSetDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {{
+                    ?obs a qb:Observation .
+                    FILTER NOT EXISTS { ?obs qb:dataSet ?dataset1 . }
+                } UNION {
+                    ?obs a qb:Observation ;
+                    qb:dataSet ?dataset1, ?dataset2 .
+                    FILTER (?dataset1 != ?dataset2)
+                }}"
+        ];
+        
+        #
+        # Unique DSD
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Unique DSD" ;
+            :shortLabel "IC-2" ;
+            :label "AnalyzeAction_UniqueDSD" ;
+            :description "AnalyzeAction_UniqueDSDDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {{
+                    ?dataset a qb:DataSet .
+                    FILTER NOT EXISTS { ?dataset qb:structure ?dsd . }
+                } UNION { 
+                    ?dataset a qb:DataSet ;
+                    qb:structure ?dsd1, ?dsd2 .
+                    FILTER (?dsd1 != ?dsd2)
+                }}"
+        ];
+        
+        #
+        # DSD includes measure
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "DSD includes measure" ;
+            :shortLabel "IC-3" ;
+            :label "AnalyzeAction_DSDIncludesMeasure" ;
+            :description "AnalyzeAction_DSDIncludesMeasureDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?dsd a qb:DataStructureDefinition .
+                    FILTER NOT EXISTS { 
+                        ?dsd qb:component [qb:componentProperty [a qb:MeasureProperty]] 
+                    }
+                }"
+        ];
+        
+        #
+        # Dimensions have range
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Dimensions have range" ;
+            :shortLabel "IC-4" ;
+            :label "AnalyzeAction_DimensionsHaveRange" ;
+            :description "AnalyzeAction_DimensionsHaveRangeDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?dim a qb:DimensionProperty .
+                    FILTER NOT EXISTS { 
+                        ?dim rdfs:range [] 
+                    }
+                }"
+        ];
+        
+        #
+        # Concept dimensions have code lists
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Concept dimensions have code lists" ;
+            :shortLabel "IC-5" ;
+            :label "AnalyzeAction_ConceptDimensionsHaveCodeLists" ;
+            :description "AnalyzeAction_ConceptDimensionsHaveCodeListsDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?dsd qb:component ?componentSpec .
+                    ?componentSpec qb:componentRequired \"false\"^^xsd:boolean ;
+                    qb:componentProperty ?component .
+                    FILTER NOT EXISTS { 
+                        ?component a qb:AttributeProperty 
+                    }
+                }"
+        ];
+        
+        #
+        # Only attributes may be optional
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Only attributes may be optional" ;
+            :shortLabel "IC-6" ;
+            :label "AnalyzeAction_OnlyAttributesMayBeOptional" ;
+            :description "AnalyzeAction_OnlyAttributesMayBeOptionalDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?dsd qb:component ?componentSpec .
+                    ?componentSpec qb:componentRequired \"false\"^^xsd:boolean ;
+                    qb:componentProperty ?component .
+                    FILTER NOT EXISTS { 
+                        ?component a qb:AttributeProperty 
+                    }
+                }"
+        ];
+        
+        #
+        # Slice Keys must be declared
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Slice Keys must be declared" ;
+            :shortLabel "IC-7" ;
+            :label "AnalyzeAction_SliceKeysMustBeDeclared" ;
+            :description "AnalyzeAction_SliceKeysMustBeDeclaredDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?sliceKey a qb:SliceKey .
+                    FILTER NOT EXISTS { 
+                        [a qb:DataStructureDefinition] qb:sliceKey ?sliceKey 
+                    }
+                }"
+        ];
+        
+        #
+        # Slice Keys consistent with DSD
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Slice Keys consistent with DSD" ;
+            :shortLabel "IC-8" ;
+            :label "AnalyzeAction_SliceKeysConsistentWithDSD" ;
+            :description "AnalyzeAction_SliceKeysConsistentWithDSDDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?slicekey a qb:SliceKey;
+                    qb:componentProperty ?prop .
+                    ?dsd qb:sliceKey ?sliceKey .
+                    FILTER NOT EXISTS { 
+                        ?dsd qb:component [qb:componentProperty ?prop] 
+                    }
+                }"
+        ];
+        
+        #
+        # Unique slice structure
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Unique slice structure" ;
+            :shortLabel "IC-9" ;
+            :label "AnalyzeAction_UniqueSliceStructure" ;
+            :description "AnalyzeAction_UniqueSliceStructureDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {{
+                    ?slice a qb:Slice .
+                    FILTER NOT EXISTS { 
+                        ?slice qb:sliceStructure ?key 
+                    }
+                } UNION {
+                    ?slice a qb:Slice ;
+                           qb:sliceStructure ?key1;
+                           qb:sliceStructure ?key2.
+                    FILTER (?key1 != ?key2)
+                }}"
+        ];
+        
+        #
+        # Slice dimensions complete
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Slice dimensions complete" ;
+            :shortLabel "IC-10" ;
+            :label "AnalyzeAction_SliceDimensionsComplete" ;
+            :description "AnalyzeAction_SliceDimensionsCompleteDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?slice qb:sliceStructure [qb:componentProperty ?dim] .
+                    FILTER NOT EXISTS { 
+                        ?slice ?dim [] 
+                    }
+                }"
+        ];
+        
+        #
+        # All dimensions required
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "All dimensions required" ;
+            :shortLabel "IC-11" ;
+            :label "AnalyzeAction_AllDimensionsRequired" ;
+            :description "AnalyzeAction_AllDimensionsRequiredDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?obs qb:dataSet ?dim .
+                    ?obs qb:structure ?dsd .
+                    ?dsd qb:component ?c .
+                    ?c qb:componentProperty ?dim .
+                    ?dim a qb:DimensionProperty .
+                    FILTER NOT EXISTS { 
+                        ?obs ?dim [] 
+                    }
+                }"
+        ];
+        
+        #
+        # No duplicate observations
+        #
+        
+        # SPARQL not working!
+        
+        
+        #
+        # Required attributes
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Required attributes" ;
+            :shortLabel "IC-13" ;
+            :label "AnalyzeAction_RequiredAttributes" ;
+            :description "AnalyzeAction_RequiredAttributesDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?obs qb:dataSet ?ds .
+                    ?ds qb:structure ?dsd .
+                    ?dsd qb:component ?component .
+                    ?component qb:componentRequired \"true\"^^xsd:boolean ;
+                               qb:componentProperty ?attr .
+                    FILTER NOT EXISTS { 
+                        ?obs ?attr [] 
+                    }
+                }"
+        ];
+        
+        #
+        # All measures present
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "All measures present" ;
+            :shortLabel "IC-14" ;
+            :label "AnalyzeAction_AllMeasuresPresent" ;
+            :description "AnalyzeAction_AllMeasuresPresentDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?obs qb:dataSet ?ds .
+                    ?ds qb:structure ?dsd .
+                    FILTER NOT EXISTS { 
+                        ?dsd qb:component ?c .
+                        ?c qb:componentProperty qb:measureType . 
+                    }
+
+                    ?dsd qb:component ?c .
+                    ?c qb:componentProperty ?measure .
+                    ?measure a qb:MeasureProperty .
+                    FILTER NOT EXISTS { 
+                        ?obs ?measure [] 
+                    }
+                }"
+        ];
+        
+        #
+        # Measure dimension consistent
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Measure dimension consistent" ;
+            :shortLabel "IC-15" ;
+            :label "AnalyzeAction_MeasureDimensionConsistent" ;
+            :description "AnalyzeAction_MeasureDimensionConsistentDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?obs qb:dataSet ?ds .
+                    ?ds qb:structure ?dsd ;
+                        qb:measureType ?measure .
+                    ?dsd qb:component ?c .
+                    ?c qb:componentProperty qb:measureType .
+                    FILTER NOT EXISTS { 
+                        ?obs ?measure [] 
+                    }
+                }"
+        ];
+        
+        #
+        # Single measure on measure dimension observation
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Single measure on measure dimension observation" ;
+            :shortLabel "IC-16" ;
+            :label "AnalyzeAction_SingleMeasureOnMeasureDimensionObservation" ;
+            :description "AnalyzeAction_SingleMeasureOnMeasureDimensionObservationDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?obs qb:dataSet ?ds .
+                    ?ds qb:structure ?dsd ;
+                        qb:measureType ?measure ;
+                        ?omeasure [] .
+                    ?dsd qb:component ?c .
+                    ?c qb:componentProperty qb:measureType ;
+                        qb:component ?c;
+                        qb:componentProperty ?omeasure .
+                    ?omeasure a qb:MeasureProperty .
+                    FILTER (
+                        ?omeasure != ?measure
+                    )
+                }"
+        ];        
+        
+        #
+        # All measures present in measures dimension cube
+        #
+        
+        # SPARQL not working!
+        
+        
+        #
+        # Consistent data set links
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Consistent data set links" ;
+            :shortLabel "IC-18" ;
+            :label "AnalyzeAction_ConsistentDataSetLinks" ;
+            :description "AnalyzeAction_ConsistentDataSetLinksDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?dataset qb:slice       ?slice .
+                    ?slice   qb:observation ?obs .
+                    FILTER NOT EXISTS { 
+                        ?obs qb:dataSet ?dataset . 
+                    }
+                }"
+        ];
+        
+        #
+        # Codes from code list 1
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Codes from code list 1" ;
+            :shortLabel "IC-19" ;
+            :label "AnalyzeAction_CodesFromCodeList1" ;
+            :description "AnalyzeAction_CodesFromCodeList1Description" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?obs qb:dataSet ?ds .
+                    ?ds qb:structure ?dsd .
+                    ?dsd qb:component ?c .
+                    ?c qb:componentProperty ?dim .
+                    ?dim a qb:DimensionProperty ;
+                         qb:codeList ?list .
+                    ?list a skos:ConceptScheme .
+                    ?obs ?dim ?v .
+                    FILTER NOT EXISTS { 
+                        ?v a skos:Concept ; 
+                           skos:inScheme ?list 
+                    }
+                }"
+        ];
+        
+        #
+        # Codes from code list 2
+        #
+        
+        # TODO: skos:member ===> skos:member+
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Codes from code list 2" ;
+            :shortLabel "IC-19-2" ;
+            :label "AnalyzeAction_CodesFromCodeList2" ;
+            :description "AnalyzeAction_CodesFromCodeList2Description" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?obs qb:dataSet ?ds .
+                    ?ds qb:structure ?dsd .
+                    ?dsd qb:component ?c .
+                    ?c qb:componentProperty ?dim .
+                    ?dim a qb:DimensionProperty ;
+                         qb:codeList ?list .
+                    ?list a skos:Collection .
+                    ?obs ?dim ?v .
+                    FILTER NOT EXISTS { 
+                        ?v a skos:Concept . 
+                        ?list skos:member ?v 
+                    }
+                }"
+        ];
+        
+        #
+        # Codes from hierarchy
+        #
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Codes from hierarchy" ;
+            :shortLabel "IC-20" ;
+            :label "AnalyzeAction_CodesFromHierarchy" ;
+            :description "AnalyzeAction_CodesFromHierarchyDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                SELECT ?p 
+                WHERE {
+                    ?hierarchy a qb:HierarchicalCodeList ;
+                    qb:parentChildProperty ?p .
+                    FILTER ( 
+                        isIRI(?p) 
+                    )
+                }";
+            :template "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?obs qb:dataSet ?ds .
+                    ?ds qb:structure ?dsd .
+                    ?dsd qb:component ?c .
+                    ?c qb:componentProperty ?dim .
+                    ?dim a qb:DimensionProperty ;
+                         qb:codeList ?list .
+                    ?list a qb:HierarchicalCodeList .
+                    ?obs ?dim ?v .
+                    FILTER NOT EXISTS { 
+                        ?list qb:hierarchyRoot ?hr .
+                        ?hr $element ?v 
+                    }
+                }"
+        ];
+        
+        #
+        # Codes from hierarchy (inverse)
+        #
+        
+        # TODO: $element ===> FILTER NOT EXISTS { ?list qb:hierarchyRoot/(^<$p>)* ?v }
+        owconfig:config [
+            a owconfig:Config;
+            owconfig:id "Codes from hierarchy (inverse)" ;
+            :shortLabel "IC-21" ;
+            :label "AnalyzeAction_CodesFromHierarchyInverse" ;
+            :description "AnalyzeAction_CodesFromHierarchyInverseDescription" ;
+            :query "PREFIX qb:<http://purl.org/linked-data/cube#>
+                SELECT ?p 
+                WHERE {
+                    ?hierarchy a qb:HierarchicalCodeList;
+                               qb:parentChildProperty ?pcp .
+                    FILTER( 
+                        isBlank(?pcp) 
+                    )
+                    ?pcp owl:inverseOf ?p .                    
+                    FILTER( isIRI(?p) )
+                }";
+            :template "PREFIX qb:<http://purl.org/linked-data/cube#>
+                ASK {
+                    ?obs qb:dataSet ?ds .
+                    ?ds qb:structure ?dsd .
+                    ?dsd qb:component ?c .
+                    ?c qb:componentProperty ?dim .
+                    ?dim a qb:DimensionProperty ;
+                         qb:codeList ?list .
+                    ?list a qb:HierarchicalCodeList .
+                    ?obs ?dim ?v .
+                    FILTER NOT EXISTS { 
+                        ?list qb:hierarchyRoot ?hr .
+                        ?hr $element ?v 
+                    }
+                }"
+        ]
+        
+    ] .
+    

@@ -1,0 +1,145 @@
+AnalyzeAction_AllDimensionsRequired;All Dimensions required
+AnalyzeAction_AllDimensionsRequiredDescription;Every qb:Observation has a value for each dimension declared in its associated qb:DataStructureDefinition.
+AnalyzeAction_AllMeasuresPresent;All Measures present
+AnalyzeAction_AllMeasuresPresentDescription;In a qb:DataSet which does not use a Measure dimension then each individual qb:Observation must have a value for every declared measure.
+AnalyzeAction_AtLeastXObservationsFound;10.000+
+AnalyzeAction_AttributeProperties;Attribute Properties
+AnalyzeAction_CodesFromCodeList1;Codes from Code List 1
+AnalyzeAction_CodesFromCodeList1Dscription;If a dimension property has a qb:codeList, then the value of the dimension property on every qb:Observation must be in the code list. In the case of a skos:ConceptScheme then each concept must be linked to the scheme using skos:inScheme
+AnalyzeAction_CodesFromCodeList2;Codes from Code List 2
+AnalyzeAction_CodesFromCodeList2Dscription;If a dimension property has a qb:codeList, then the value of the dimension property on every qb:Observation must be in the code list.  In the case of a skos:Collection then the collection must link to each concept (or to nested collections) using skos:member. If the collection uses skos:memberList then the entailment of skos:member values defined by S36 in [SKOS-REFERENCE] must be materialized before this check is applied.
+AnalyzeAction_CodesFromHierarchy;Codes from Hierarchy
+AnalyzeAction_CodesFromHierarchyDescription;If a dimension property has a qb:HierarchicalCodeList with a non-blank qb:parentChildProperty then the value of that dimension property on every qb:Observation must be reachable from a root of the hierarchy using zero or more hops along the qb:parentChildProperty links.
+AnalyzeAction_CodesFromHierarchyInverse;Codes from Hierarchy (inverse)
+AnalyzeAction_CodesFromHierarchyInverseDescription;If a dimension property has a qb:HierarchicalCodeList with an inverse qb:parentChildProperty then the value of that dimension property on every qb:Observation must be reachable from a root of the hierarchy using zero or more hops along the inverse qb:parentChildProperty links.
+AnalyzeAction_Component;Component
+AnalyzeAction_ComponentShort;C
+AnalyzeAction_ComponentSpecification;Component Specification
+AnalyzeAction_ComponentSpecificationShort;CS
+AnalyzeAction_ConceptDimensionsHaveCodeLists;Concept Dimensions have Code Lists
+AnalyzeAction_ConceptDimensionsHaveCodeListsDescription;Every dimension with range skos:Concept must have a qb:codeList.
+AnalyzeAction_ConsistentDataSetLinks;Consistent Data Set Links
+AnalyzeAction_ConsistentDataSetLinksDescription;If a qb:DataSet D has a qb:slice S, and S has an qb:observation O, then the qb:dataSet corresponding to O must be D.
+AnalyzeAction_DataSet;Data Set
+AnalyzeAction_DataSets;Data Sets
+AnalyzeAction_DataStructureDefinition;Data Structure Definition
+AnalyzeAction_DataStructureDefinitions;Data Structure Definitions
+AnalyzeAction_DetailedInformations;Detailed Information
+AnalyzeAction_DimensionElements;Dimension Elements
+AnalyzeAction_Dimensions;Dimensions
+AnalyzeAction_DimensionsHaveRange;Dimensions have Range
+AnalyzeAction_DimensionsHaveRangeDescription;Every dimension declared in a qb:DataStructureDefinition must have a declared rdfs:range.
+AnalyzeAction_DSDIncludesMeasure;DSD includes Measure
+AnalyzeAction_DSDIncludesMeasureDescription;Every qb:DataStructureDefinition must include at least one declared measure.
+AnalyzeAction_Elements;Elements
+AnalyzeAction_GeneralInformation;General Information
+AnalyzeAction_HeadDescriptionText;In the following you see a few statistical observations about the selected dataset.
+AnalyzeAction_IntegrityConstraints;Integrity Constraints
+AnalyzeAction_MeasureDimensionConsistent;Measure Dimension Consistent
+AnalyzeAction_MeasureDimensionConsistentDescription;In a qb:DataSet which uses a Measure dimension then each qb:Observation must have a value for the measure corresponding to its given qb:measureType.
+AnalyzeAction_MeasureProperties;Measure Properties
+AnalyzeAction_NothingFound;Nothing Found
+AnalyzeAction_NotificationsAndWarnings;Notifications and Warnings
+AnalyzeAction_NumberOf;Number of
+AnalyzeAction_OnlyAttributesMayBeOptional;Only Attributes may be optional
+AnalyzeAction_OnlyAttributesMayBeOptionalDescription;The only components of a qb:DataStructureDefinition that may be marked as optional, using qb:componentRequired are attributes.
+AnalyzeAction_Observations;Observations
+AnalyzeAction_RequiredAttributes;Required Attributes
+AnalyzeAction_RequiredAttributesDescription;Every qb:Observation has a value for each declared attribute that is marked as required.
+AnalyzeAction_SingleMeasureOnMeasureDimensionObservation;Single Measure on Measure Dimension Observation
+AnalyzeAction_SingleMeasureOnMeasureDimensionObservationDescription;In a qb:DataSet which uses a Measure dimension then each qb:Observation must only have a value for one measure (by IC-15 this will be the measure corresponding to its qb:measureType).
+AnalyzeAction_SliceDimensionsComplete;Slice Dimensions Complete
+AnalyzeAction_SliceDimensionsCompleteDescriptions;Every qb:Slice must have a value for every dimension declared in its qb:sliceStructure.
+AnalyzeAction_SliceKeys;Slice Keys
+AnalyzeAction_SliceKeysConsistentWithDSD;Slice Keys consistent with DSD
+AnalyzeAction_SliceKeysConsistentWithDSDDescription;Every qb:componentProperty on a qb:SliceKey must also be declared as a qb:component of the associated qb:DataStructureDefinition.
+AnalyzeAction_SliceKeysMustBeDeclared;Slice Keys must be declared
+AnalyzeAction_SliceKeysMustBeDeclaredDescription;Every qb:SliceKey must be associated with a qb:DataStructureDefinition.
+AnalyzeAction_Slices;Slices
+AnalyzeAction_UniqueDataSet;Unique DataSet
+AnalyzeAction_UniqueDataSetDescription;Every qb:Observation has exactly one associated qb:DataSet.
+AnalyzeAction_UniqueDSD;Unique DSD
+AnalyzeAction_UniqueDSDDescription;Every qb:DataSet has exactly one associated qb:DataStructureDefinition.
+AnalyzeAction_UniqueSliceStructure;Unique Slice Structure
+AnalyzeAction_UniqueSliceStructureDescription;Each qb:Slice must have exactly one associated qb:sliceStructure.
+AnalyzeAction_UsedQuery;Used Query
+AnalyzeAction_ValidObservations;Valid Observations
+
+ApplicationExtrasMenu_Label;CubeViz: Analyze DataCube
+ApplicationExtrasMenu_ComparingLabel;CubeViz: Compare DataSets
+
+DataSelectionModule_Alphabet;Alphabet
+DataSelectionModule_AttributeDialogTitle;Unit Selection
+DataSelectionModule_AttributeDialogDescription;In the following list, different units are available for selection. As the default, CubeViz selects one out of the list automatically, but you can change the selection according to your needs. Please note that you are only allowed to select one of the listed items.
+DataSelectionModule_AttributeDialogNoAttributeSelectedLabel;No attribute selected
+DataSelectionModule_AttributeDialogNoAttributeSelectedDescription;Attributes available for selection
+DataSelectionModule_AttributeDialogNoAttributeSelectionElement;Do not use any attribute
+DataSelectionModule_Cancel;Cancel
+DataSelectionModule_ChangeSelection;Change
+DataSelectionModule_CheckStatus;Check Status
+DataSelectionModule_ClickMoreInformation;Click for more information
+DataSelectionModule_CloseAndUpdateVisz;Update Selection
+DataSelectionModule_ComponentDialogDescription;In the following form, those dimension elements are listed that are used to express the context of the corresponding statistical observations. This is a multiple choice selection, which means that you are able to select a minimum of one and a maximum of all items. Please note that you have to select at least one item. If you select all items it can happen that the server has to respond with a very huge set of data which can can slow down the response and processing time.
+DataSelectionModule_ComponentDialogMainTitle;Dimension Element Selection 
+DataSelectionModule_ComponentHelpDialogDescription;The selected RDF dataset contains statistical context information of the observations. In a DataCube such contextual information are expressed as dimensions and dimension elements. To select observations of your interest you have to select elements belonging to these dimensions. The available dimensions are available in the box. Below every dimension the amount of selected and available dimension elements is diplayed. To change the slection please use the selection dialogue for each dimension.
+DataSelectionModule_ComponentHelpDialogTitle;What is a dimension and why should I select elements belonging to a dimension?
+DataSelectionModule_DeselectAllItems;Deselect all items
+DataSelectionModule_DataSetDialogDescription;In the following item list, the DataCube datasets available are part of the given dataset. These DataCube datasets are used to fragment the set of statistical data items. In order to visualize a chart using CubeViz, select one of the DataCube datasets below.
+DataSelectionModule_DataSetDialogTitle;Dataset Selection 
+DataSelectionModule_DataSetHelpDialogDescription;The selected RDF dataset contains a subdivision called “DataCube datasets” which are used to group different statistical data items. The structure of a DataCube dataset corresponds to a specific data structure definition. There may be cases where different DataCube datasets share their corresonding DataStructureDefinition. In the selection dialogue you have the option to change the selected DataCube dataset. If you do not select one of the subdivision, CubeViz will select one automatically.
+DataSelectionModule_DataSetHelpDialogTitle;What is a dataset and why should I select one?
+DataSelectionModule_DataSetIconText;What is a dataset and why should I select one?
+DataSelectionModule_Link;Link
+DataSelectionModule_LoadingMessage;I am working ...
+DataSelectionModule_Measure;Measure
+DataSelectionModule_MeasureDialogTitle;Measurement Selection
+DataSelectionModule_MeasureDialogDescription;In the following list, different measurements are available for selection. As the default, CubeViz selects one out of the list automatically, but you can change the selection according to your needs. Please note that you are only allowed to select one of the listed items.
+DataSelectionModule_ObservationCount;Observation Count
+DataSelectionModule_Of;of
+DataSelectionModule_Permalink;Share
+DataSelectionModule_PermaLinkLabel;Use the following Link to share the current output
+DataSelectionModule_SelectAllItems;Select all items
+DataSelectionModule_SelectAttributeAndMeasure;Select Unit and Measurement
+DataSelectionModule_SelectAttributeAndMeasureIconText;Why are there different measurements and units?
+DataSelectionModule_SelectAttributeAndMeasureHelpDialogTitle;Why are there different measurements and units?
+DataSelectionModule_SelectAttributeAndMeasureHelpDialogDescription;Sometimes a dataset contains different measurement and units. This is the case where a statistical observation is being expressed for different purposes. For instance, a spatial distance between two things can be expressed using centimeter and meter. To improve the comparability of observations the user should determine both the measurement and the unit. Please use the selection dialogue to configure this according to your needs.
+DataSelectionModule_SelectComponentElements;Select elements of interest
+DataSelectionModule_SelectComponents;Configure the Dimensions
+DataSelectionModule_SelectComponentsIconText;What is a dimension and why should I select elements belonging to a dimension?
+DataSelectionModule_SelectComponentsHelpText;Each data set contains statistical data. These data is a collection of so-called observations. Under an observation you can picture a point in a room. This point has coordinates which locates him at a specific position in this room. In general these coordinates are 3 dimensional: height, width and deep. In the DataCube context these coordinates are dimensions and it is possible to have more than these 3. But these dimension are not positions in a room, you may think, but could be everything, like a scala of money (e.g. from 1000 EUR to 100.000 EUR).
+DataSelectionModule_SelectDS;Select a part of the Dataset
+DataSelectionModule_Selected;Selected
+DataSelectionModule_SelectSlice;Select dataset filter
+DataSelectionModule_SelectSliceIconText;Why do i should use dataset filter?
+DataSelectionModule_ShowVisualization;Update Chart
+DataSelectionModule_SliceDialogDescription;A dataset filter set a fix amount of dimension elements. Its purpose is to give you a specific view of the data.
+DataSelectionModule_SliceDialogNoSliceSelectionElement;Do not use any slices
+DataSelectionModule_SliceDialogTitle;Dataset filter selection
+DataSelectionModule_SliceHelpDialogDescription;A dataset filter set a fix amount of dimension elements. Its purpose is to give you a specific view of the data. In general, the author of the data you see, use slices to show you remarkable observations or interesting facts.
+DataSelectionModule_SliceHelpDialogTitle;Why do i should use dataset filter?
+DataSelectionModule_SliceNoSelection;No dataset filter selected yet
+DataSelectionModule_SortBy;Sort By
+
+IndexAction_ClickMoreInformation;Click For More Information
+IndexAction_ShowMetaData;Show MetaData
+IndexAction_Close;Close
+IndexAction_CloseMenuWithoutApplyingChanges;Close This Menu Without Applying Changes
+IndexAction_ConfigureVisualization;Configure Visualization
+IndexAction_Explanation;Explanation
+IndexAction_ExportAs;Export as
+IndexAction_ExportAsTurtle;Export as RDF/Turtle
+IndexAction_ExportAsCsv;Export as CSV
+IndexAction_GoToSource;Go To Source
+IndexAction_JumpToLegend;Jump to Legend
+IndexAction_MetaDataAboutDimensionElement;Metadata about the dimension element
+IndexAction_NotificationHighChartsException10;That chart can not be created due to the fact that selected data contains zero or subzero values. Please change the configuration in the left sidebar or use another Scale value but not Logarithmic.
+IndexAction_NotificationNoDataFitsSelection;No data fits to your selection, please adapt your selection in the left sidebar manually.
+IndexAction_NotificationNoDataFitsSelectionExplanation;This behavior can have various reasons. On the one hand it is possible that there is no data available according to the selection. In order to reduce the load of the server we decided not to check the availability of data for every selection. <br/><br/> On the other hand it is possible that a chart can not be produced if the user selects inapplicable combinations of options such as a logarithm scale in combination with percentage stacking. Trapping such cases is not yet fully implemented but will be done soon. <br/><br/>To solve such problems we suggest to change the selection and/or the selected chart options.
+IndexAction_RetrievedData;Retrieved Data
+IndexAction_SelectedConfiguration;Selected Configuration
+IndexAction_ShowInformationAbout;Show Information About
+IndexAction_ShowMoreInformation;Show More Information
+IndexAction_Update;Update
+IndexAction_UpdateVisualizationBasedSettings;Update Visualization Based On New Settings
+IndexAction_VisualizationOf;Visualization Of
+

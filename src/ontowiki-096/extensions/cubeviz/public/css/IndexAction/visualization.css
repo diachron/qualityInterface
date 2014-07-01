@@ -1,0 +1,31 @@
+#cubeviz-index-visualization
+{
+    clear: both;
+    margin-bottom: 35px;
+}
+
+#cubeviz-visualization-nothingFoundNotification
+{
+    padding-top: 100px;
+}
+
+#cubeviz-visualization-notificationHightchartsException10
+{
+    padding-top: 100px; 
+    text-align: left;
+    width: 50%;
+}
+
+#cubeviz-index-visualization circle 
+{
+    fill: rgb(31, 119, 180);
+    fill-opacity: .50;
+    stroke: #212121;
+    stroke-width: 1px;
+}
+
+.cubeviz-visualization-d3js-circleLeaf circle 
+{
+    fill: #ff7f0e;
+    fill-opacity: 1;
+}

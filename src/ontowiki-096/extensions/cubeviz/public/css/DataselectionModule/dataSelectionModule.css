@@ -1,0 +1,119 @@
+.cubeviz-dataSelectionModule-blockSeparator
+{
+    clear:           both;
+    margin-bottom:  11px;
+}
+
+#cubeviz-dataSelectionModule-dataSelection
+{
+    margin-top: 0px;
+}
+
+.cubeviz-dataSelectionModule-dialogSortButtonSelected
+{
+}
+
+.cubeviz-dataSelectionModule-dialogElements
+{
+    border:             1px solid #D0D0D0;
+    list-style-type:                 none;
+    padding-top:                      5px;
+    padding-left:                    10px;
+    padding-right:                    0px;
+    padding-bottom:                  10px;
+    margin-left:                      0px;
+    margin-top:                      10px;
+    margin-bottom:                   10px;
+    
+        height:                     290px;
+    max-height:                     290px;
+    min-height:                     290px;
+    
+    width:                            98%;
+    
+    overflow-y:                    scroll;
+}
+
+.cubeviz-dataSelectionModule-dialogElements li
+{
+    margin-top:     4px;
+    margin-left:    4px;
+}
+
+.cubeviz-dataSelectionModule-dialog-smallDescription
+{
+    color:      #696969; 
+    font-size:     11px;
+}
+
+.cubeviz-dataSelectionModule-leftBlock
+{
+    float:        left; 
+    height:       30px; 
+    width:        20px; 
+    text-align: center; 
+    margin-top:    3px;
+}
+
+.cubeviz-dataSelectionModule-headline
+{
+    font-size:      12.5px;
+    font-weight:    bold;
+    margin-left:    10px;
+    clear:          both;
+    height:          5px;
+    min-height:      5px;
+    max-height:      5px;
+    padding-top:     5px;
+    padding-bottom: 25px;
+}
+
+.cubeviz-dataSelectionModule-middleBlock
+{
+    float:           left; 
+    width:          140px; 
+    margin-left:     20px;
+}
+
+.cubeviz-dataSelectionModule-rightBlock
+{
+    float:           left; 
+        width:       60px; 
+    min-width:       60px; 
+    height:          30px; 
+    text-align:     right; 
+    padding-top:      4px;
+}
+
+.cubeviz-dataSelectionModule-smallDescription
+{
+    color:      #696969; 
+    font-size:     11px;
+}
+
+#cubeviz-dataSelectionModule-spinner
+{
+    display:      none;
+    width:        100%;
+    text-align: center;
+}
+
+.cubeviz-dataSelectionModule-visualSeparator
+{
+    clear:          both;
+        height:     5px;
+    min-height:     5px;
+    max-height:     5px;
+    padding-top:    1px;
+    padding-bottom: 25px;
+}
+
+.cubeviz-dataSelectionModule-visualSeparator hr
+{
+    background:         #DADADA;
+    border:             0px; 
+    height:             1px; 
+    margin-top:         20px;
+}
+
+

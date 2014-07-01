@@ -1,0 +1,84 @@
+<ul id="tab-container" class="nav nav-tabs" role="tablist">
+	<li class="active"><a href="#detail">Detail</a></li>
+	<li><a href="#stats">Statistics</a></li>
+	<li><a href="#assessment">Assessment</a></li>
+</ul>
+<div class="tab-content">
+	<div class="tab-pane active" id="detail">
+		<div class="layout-col" style="width:300px;">
+			<h4>Facets</h4>
+			<div class="panel panel-default controls-bar">
+				<div class="panel panel-default">
+				  <div class="panel-heading">Category</div>
+				  <div class="panel-body">
+				  	...
+				  </div>
+				</div>
+				<div class="panel panel-default">
+				  <div class="panel-heading">Dimension</div>
+				  <div class="panel-body">
+				  	...
+				  </div>
+				</div>
+				<div class="panel panel-default">
+				  <div class="panel-heading">Metric</div>
+				  <div class="panel-body">
+				  	...
+				  </div>
+				</div>
+			</div>
+			<h4>Filters</h4>
+			<div class="panel panel-default controls-bar">
+				...
+			</div>
+		</div>
+		<div class="layout-col" style="min-width:500px; max-width:700px">
+			<div class="input-group">
+				<span class="input-group-addon">
+			  		<span class="glyphicon glyphicon-search"></span>
+			  	</span>
+			  	<input type="text" class="form-control" placeholder="Search">
+			</div>
+			<div style="width:100%; margin-top:15px;">
+				<div id="lst-datasets" class="list-group">
+					<a href="#" class="list-group-item">
+				    	<h4 class="list-group-item-heading">List group item heading</h4>
+				    	<p class="list-group-item-text">...</p>
+				  	</a>
+				  	<a href="#" class="list-group-item">
+				    	<h4 class="list-group-item-heading">List group item heading</h4>
+				    	<p class="list-group-item-text">...</p>
+				  	</a>
+				  	<a href="#" class="list-group-item">
+				    	<h4 class="list-group-item-heading">List group item heading</h4>
+				    	<p class="list-group-item-text">...</p>
+				  	</a>
+				</div>
+			</div>
+		</div>
+		<div class="layout-clear"></div>
+	</div>
+	<div class="tab-pane" id="stats">
+		Lots of stats
+	</div>
+	<div class="tab-pane" id="assessment">
+		Lots of assessment
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	$(function() {
+		// Document ready not implemented
+	});
+
+	$('#tab-container a').click(function (e) {
+	  e.preventDefault();
+	  $(this).tab('show');
+	})
+	
+	$('#lst-datasets .list-group-item').click(function (e) {
+	  e.preventDefault();
+	})
+
+</script>

@@ -1,0 +1,613 @@
+/**
+ * Chart configuration
+ * 
+ * Each key represents the "maximum" number of multiple dimensions which can
+ * be represents by one of the items in charts-array. That means, a bar chart
+ * which has maximum number of two is also able to display only one dimension.
+ */
+var CubeViz_ChartConfig = {
+    
+    /**
+     * No multiple dimensions
+     */
+    "0": {
+        "charts": [
+            /**
+             * -----------------------------------------------------------------
+             */
+            {
+                "label": "bar",
+                "className": "CubeViz_Visualization_HighCharts_Bar",
+                "icon": "bar.png",
+                
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization",
+                        "type": "bar"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    }
+                },
+                "options": [
+                    {
+                        "label": "DataLabels",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "plotOptions.series.dataLabels.enabled",
+                        "type": "array"
+                    }  
+                ]
+            },
+            {
+                "label": "column",
+                "className": "CubeViz_Visualization_HighCharts_Column",
+                "icon": "column.png",
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization",
+                        "type": "column"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    }
+                },
+                "options": [
+                    {
+                        "label": "DataLabels",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "plotOptions.series.dataLabels.enabled",
+                        "type": "array"
+                    }  
+                ]
+            }
+        ]
+    },
+    
+    /**
+     * One multiple dimensions
+     */
+    "1": {
+        "charts": [
+     /**       
+     *       {
+     *           label: "Circle Packing",
+     *           className: "CubeViz_Visualization_D3js_CirclePackingForClusters",
+     *           icon: "circlePacking.png",
+     *           
+     *           defaultConfig: {
+     *               style: {
+     *                   circle: {
+     *                       "fill": "#FFFFFF",
+     *                       "font-size": "9px",
+     *                       "font-weight": "bold",
+     *                       "text-anchor": "middle"
+     *                   }
+     *               }
+     *           },
+     *           
+     *           options: []
+     *       },
+     */       
+            /**
+             * -----------------------------------------------------------------
+             */
+            {
+                "label": "bar",
+                "className": "CubeViz_Visualization_HighCharts_Bar",
+                "icon": "bar.png",
+                
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization",
+                        "type": "bar"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    }
+                },
+                
+                "options": [
+                    {
+                        "label": "Switching axes",
+                        "values": [
+                            { "label": "No", "value": false, "isDefault": true },
+                            { "label": "Yes", "value": true }
+                        ],
+                        "key": "_cubeVizVisz.doSwitchingAxes",
+                        "type": "array"
+                    },
+                    {
+                        "label": "DataLabels",
+                        "values": [
+                            { "label": "None", "value": "" , "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "plotOptions.series.dataLabels.enabled",
+                        "type": "array"
+                    },
+                    {
+                        "label": "Scale",
+                        "values": [
+                            { "label": "Linear", "value": "linear", "isDefault": true },
+                            { "label": "Logarithmic", "value": "logarithmic" }
+                        ],
+                        "key": "yAxis.type",
+                        "type": "array"
+                    }
+                ]
+            },
+            {
+                "label": "column",
+                "className": "CubeViz_Visualization_HighCharts_Column",
+                "icon": "column.png",
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization",
+                        "type": "column"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    }
+                },
+                
+                "options": [
+                    {
+                        "label": "Type",
+                        "values": [
+                            { "label": "Bar", "value": "bar", "isDefault": true },
+                            { "label": "Column", "value": "column" }
+                        ],
+                        "key": "chart.type",
+                        "type": "array"
+                    },
+                    {
+                        /* System default for _cubeVizVisz.doSwitchingAxes is false! */
+                        "label": "Switching axes",
+                        "values": [
+                            { "label": "No", "value": false, "isDefault": true },
+                            { "label": "Yes", "value": true }
+                        ],
+                        "key": "_cubeVizVisz.doSwitchingAxes",
+                        "type": "array"
+                    },
+                    {
+                        "label": "DataLabels",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "plotOptions.series.dataLabels.enabled",
+                        "type": "array"
+                    },
+                    {
+                        "label": "Scale",
+                        "values": [
+                            { "label": "Linear", "value": "linear", "isDefault": true },
+                            { "label": "Logarithmic", "value": "logarithmic" }
+                        ],
+                        "key": "yAxis.type",
+                        "type": "array"
+                    }
+                ]
+            },
+            
+            /**
+             * -----------------------------------------------------------------
+             */
+           {
+                "label": "line",
+                "className": "CubeViz_Visualization_HighCharts_Line",
+                "icon": "line.png",
+                
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    }
+                },
+                
+                "options": [   
+                    {
+                        "label": "Type",
+                        "values": [
+                            { "label": "Line", "value": "line", "isDefault": true },
+                            { "label": "Spline", "value": "spline" },
+                            { "label": "Area", "value": "area" },
+                            { "label": "AreaSpline", "value": "areaspline" },
+                            { "label": "Scatterplot", "value": "scatter" }
+                        ],
+                        "key": "chart.type",
+                        "type": "array"
+                    },
+                    {
+                        /* System default for _cubeVizVisz.doSwitchingAxes is false! */
+                        "label": "Switching axes",
+                        "values": [
+                            { "label": "No", "value": false, "isDefault": true },
+                            { "label": "Yes", "value": true }
+                        ],
+                        "key": "_cubeVizVisz.doSwitchingAxes",
+                        "type": "array"
+                    },
+                    {
+                        "label": "DataLabels",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "plotOptions.series.dataLabels.enabled",
+                        "type": "array"
+                    },   
+                    {
+                        "label": "Inverted",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "chart.inverted",
+                        "type": "array"
+                    },
+                    {
+                        "label": "Scale",
+                        "values": [
+                            { "label": "Linear", "value": "linear", "isDefault": true },
+                            { "label": "Logarithmic", "value": "logarithmic" }
+                        ],
+                        "key": "yAxis.type",
+                        "type": "array"
+                    }
+                ]
+            },
+            
+            /**
+             * -----------------------------------------------------------------
+             */
+            {
+                "label": "pie",
+                "className": "CubeViz_Visualization_HighCharts_Pie",
+                "icon": "pie.png",
+                
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization",
+                        "type": "pie",
+                        "plotShadow": "true"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    },
+                    "tooltip": {
+                        "percentageDecimals": "1"
+                    },
+                    "plotOptions": {
+                        "pie": {
+                            "allowPointSelect": "true",
+                            "cursor": "pointer",
+                            "dataLabels": {
+                                "enabled": "false"
+                            },
+                            "showInLegend": "false"
+                        }
+                    }
+                },
+                                
+                "options": [                   
+                ]
+            }
+        ]
+    },
+    
+    /**
+     * Two multiple dimensions
+     */
+    "2": {
+        "charts": [
+     /**           
+     *       {
+     *           label: "Circle Packing for Clusters",
+     *           className: "CubeViz_Visualization_D3js_CirclePackingForClusters",
+     *           icon: "circlePackingForClusters.png",
+     *           
+     *           defaultConfig: {
+     *               style: {
+     *                   circle: {
+     *                       "fill": "#FFFFFF",
+     *                       "font-size": "9px",
+     *                       "font-weight": "bold",
+     *                       "text-anchor": "middle"
+     *                   }
+     *               }
+     *           },
+     *           
+     *           options: []
+     *       },
+     */            
+            {
+                "label": "bar",
+                "className": "CubeViz_Visualization_HighCharts_Bar",
+                "icon": "bar.png",
+                
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization",
+                        "type": "bar"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    },
+                    "plotOptions": {
+                        "series": {
+                            "stacking": null
+                        }
+                    }
+                },
+                
+                "options": [
+                    {
+                        "label": "Type",
+                        "values": [
+                            { "label": "Bar", "value": "bar", "isDefault": true },
+                            { "label": "Column", "value": "column" }
+                        ],
+                        "key": "chart.type",
+                        "type": "array"
+                    },
+                    {
+                        /* System default fpr _cubeVizVisz.doSwitchingAxes is false! */
+                        "label": "Switching axes",
+                        "values": [
+                            { "label": "No", "value": false, "isDefault": true },
+                            { "label": "Yes", "value": true }
+                        ],
+                        "key": "_cubeVizVisz.doSwitchingAxes",
+                        "type": "array"
+                    },
+                    {
+                        "label": "DataLabels",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "plotOptions.series.dataLabels.enabled",
+                        "type": "array"
+                    },
+                    {
+                        "label": "Stacking",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Normal", "value": "normal" },
+                            { "label": "Percentage", "value": "percent" }
+                        ],
+                        "key": "plotOptions.series.stacking",
+                        "type": "array"                        
+                    },
+                    {
+                        "label": "Scale",
+                        "values": [
+                            { "label": "Linear", "value": "linear", "isDefault": true },
+                            { "label": "Logarithmic", "value": "logarithmic" }
+                        ],
+                        "key": "yAxis.type",
+                        "type": "array"
+                    }
+                ]
+            },
+            
+            {
+                "label": "column",
+                "className": "CubeViz_Visualization_HighCharts_Column",
+                "icon": "column.png",
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization",
+                        "type": "column"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    }
+                },
+                
+                "options": [
+                    {
+                        "label": "Type",
+                        "values": [
+                            { "label": "Column", "value": "column", "isDefault": true },
+                            { "label": "Bar", "value": "bar" }
+                        ],
+                        "key": "chart.type",
+                        "type": "array"
+                    },
+                    {
+                        /* System default for _cubeVizVisz.doSwitchingAxes is false! */
+                        "label": "Switching axes",
+                        "values": [
+                            { "label": "No", "value": false, "isDefault": true },
+                            { "label": "Yes", "value": true }
+                        ],
+                        "key": "_cubeVizVisz.doSwitchingAxes",
+                        "type": "array"
+                    },
+                    {
+                        "label": "DataLabels",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "plotOptions.series.dataLabels.enabled",
+                        "type": "array"
+                    },
+                    {
+                        "label": "Scale",
+                        "values": [
+                            { "label": "Linear", "value": "linear", "isDefault": true },
+                            { "label": "Logarithmic", "value": "logarithmic" }
+                        ],
+                        "key": "yAxis.type",
+                        "type": "array"
+                    }
+                ]
+            },
+            
+            /**
+             * -----------------------------------------------------------------
+             */
+            {
+                "label": "polar",
+                "className": "CubeViz_Visualization_HighCharts_Polar",
+                "icon": "polar.png",
+                
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization",
+                        "polar": "true"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    }
+                },
+                "options": [
+                    {
+                        "label": "Type",
+                        "values": [
+                            { "label": "Line", "value": "line", "isDefault": true },
+                            { "label": "Spline", "value": "spline" },
+                            { "label": "Area", "value": "area" },
+                            { "label": "AreaSpline", "value": "areaspline" },
+                            { "label": "Column", "value": "column" },
+                            { "label": "Scatter", "value": "scatter" }
+                        ],
+                        "key": "chart.type",
+                        "type": "array"
+                    },
+                    {
+                        /* System default fpr _cubeVizVisz.doSwitchingAxes is false! */
+                        "label": "Switching axes",
+                        "values": [
+                            { "label": "No", "value": false, "isDefault": true },
+                            { "label": "Yes", "value": true }
+                        ],
+                        "key": "_cubeVizVisz.doSwitchingAxes",
+                        "type": "array"
+                    },
+                    {
+                        "label": "Stacking",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Normal", "value": "normal" },
+                            { "label": "Percentage", "value": "percent" }
+                        ],
+                        "key": "plotOptions.series.stacking",
+                        "type": "array"
+                    },
+                    {
+                        "label": "Scale",
+                        "values": [
+                            { "label": "Linear", "value": "linear", "isDefault": true },
+                            { "label": "Logarithmic", "value": "logarithmic" }
+                        ],
+                        "key": "yAxis.type",
+                        "type": "array"
+                    }        
+                ]
+            },
+            
+            /**
+             * -----------------------------------------------------------------
+             */
+            {
+                "label": "line",
+                "className": "CubeViz_Visualization_HighCharts_Line",
+                "icon": "line.png",
+                
+                "defaultConfig": {
+                    "chart": { 
+                        "renderTo": "cubeviz-index-visualization"
+                    },
+                    "title": {
+                        "align": "left",
+                        "color": "#000000"
+                    }
+                },
+                
+                "options": [   
+                    {
+                        "label": "Type",
+                        "values": [
+                            { "label": "Line", "value": "line", "isDefault": true },
+                            { "label": "Spline", "value": "spline" },
+                            { "label": "Area", "value": "area" },
+                            { "label": "AreaSpline", "value": "areaspline" },
+                            { "label": "Scatterplot", "value": "scatter" }
+                        ],
+                        "key": "chart.type",
+                        "type": "array"
+                    },
+                    {
+                        /* System default fpr _cubeVizVisz.doSwitchingAxes is false! */
+                        "label": "Switching axes",
+                        "values": [
+                            { "label": "No", "value": false, "isDefault": true },
+                            { "label": "Yes", "value": true }
+                        ],
+                        "key": "_cubeVizVisz.doSwitchingAxes",
+                        "type": "array"
+                    },
+                    {
+                        "label": "Stacking",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Normal", "value": "normal" },
+                            { "label": "Percentage", "value": "percent" }
+                        ],
+                        "key": "plotOptions.series.stacking",
+                        "type": "array"
+                    },
+                    {
+                        "label": "DataLabels",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "plotOptions.series.dataLabels.enabled",
+                        "type": "array"
+                    },   
+                    {
+                        "label": "Inverted",
+                        "values": [
+                            { "label": "None", "value": "", "isDefault": true },
+                            { "label": "Yes", "value": "true" }
+                        ],
+                        "key": "chart.inverted",
+                        "type": "array"
+                    },
+                    {
+                        "label": "Scale",
+                        "values": [
+                            { "label": "Linear", "value": "linear", "isDefault": true },
+                            { "label": "Logarithmic", "value": "logarithmic" }
+                        ],
+                        "key": "yAxis.type",
+                        "type": "array"
+                    }
+                ]
+            }
+        ]
+    }
+};
