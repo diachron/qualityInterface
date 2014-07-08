@@ -11,7 +11,11 @@
 				<div class="panel panel-default">
 				  <div class="panel-heading">Category</div>
 				  <div class="panel-body">
-				  	...
+				  	<div id="btnListCategories" class="btn-group-vertical btn-group-sm btn-list" data-toggle="buttons">
+				  		<button type="button" class="btn btn-default">Accessibility</button>
+				  		<button type="button" class="btn btn-default">Intrinsic</button>
+				  		<button type="button" class="btn btn-default">Performance</button>
+					</div>
 				  </div>
 				</div>
 				<div class="panel panel-default">
@@ -29,7 +33,11 @@
 			</div>
 			<h4>Filters</h4>
 			<div class="panel panel-default controls-bar">
-				...
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" value="">Available
+					</label>
+				</div>
 			</div>
 		</div>
 		<div class="layout-col" style="min-width:500px; max-width:700px">
@@ -42,16 +50,38 @@
 			<div style="width:100%; margin-top:15px;">
 				<div id="lst-datasets" class="list-group">
 					<a href="#" class="list-group-item">
-				    	<h4 class="list-group-item-heading">List group item heading</h4>
-				    	<p class="list-group-item-text">...</p>
+				    	<h4 class="list-group-item-heading">A collection of LREC2014 submissions</h4>
+				    	<p class="list-group-item-text">
+				    		The submission is the pointer to papers and to authors.
+				    	</p>
+				    	<p class="list-group-item-text lst-datasets-actions">
+			    			<button type="button" class="btn btn-primary btn-xs">Application/rdf+xml</button>&nbsp;&nbsp;
+							<button type="button" class="btn btn-success btn-xs">Quality metadata/rdf+xml</button>
+				    	</p>
 				  	</a>
 				  	<a href="#" class="list-group-item">
-				    	<h4 class="list-group-item-heading">List group item heading</h4>
-				    	<p class="list-group-item-text">...</p>
+				    	<h4 class="list-group-item-heading">RDF Licenses</h4>
+				    	<p class="list-group-item-text">
+				    		This small dataset contains licenses (suitable for general works, data, etc.) expressed as RDF.
+				    	</p>
+				    	<p class="list-group-item-text lst-datasets-actions">
+			    			<button type="button" class="btn btn-primary btn-xs">Application/turtle</button>&nbsp;&nbsp;
+							<button type="button" class="btn btn-success btn-xs">Quality metadata/turtle</button>
+				    	</p>
 				  	</a>
 				  	<a href="#" class="list-group-item">
-				    	<h4 class="list-group-item-heading">List group item heading</h4>
-				    	<p class="list-group-item-text">...</p>
+				    	<h4 class="list-group-item-heading">DisGeNET</h4>
+				    	<p class="list-group-item-text">
+				    		Linked Data version of DisGeNET, which is a Resource Description Framework (RDF) representation of a vast 
+				    		database integrating gene-disease associations from several...
+				    	</p>
+				    	<p class="list-group-item-text lst-datasets-actions">
+			    			<button type="button" class="btn btn-primary btn-xs">Application/turtle</button>&nbsp;&nbsp;
+							<button type="button" class="btn btn-success btn-xs">Quality metadata/turtle</button>&nbsp;&nbsp;
+							<button type="button" class="btn btn-info btn-xs">api/sparql</button>&nbsp;&nbsp;
+							<button type="button" class="btn btn-warning btn-xs">rdf/void</button>&nbsp;&nbsp;
+							<button type="button" class="btn btn-default btn-xs">metadata/schema</button>
+				    	</p>
 				  	</a>
 				</div>
 			</div>
@@ -68,17 +98,79 @@
 
 <script type="text/javascript">
 
+	// Document ready event handler
 	$(function() {
-		// Document ready not implemented
+		// Load quality categories
+		loadCategories();
+		
 	});
 
 	$('#tab-container a').click(function (e) {
 	  e.preventDefault();
 	  $(this).tab('show');
-	})
+	});
 	
 	$('#lst-datasets .list-group-item').click(function (e) {
 	  e.preventDefault();
-	})
+	});
+	
+	// Load quality categories defined in the DQM knowledgebase and fill the category-selection list
+	function loadCategories() {
+		var arrCategories = lodDataAccess.selectCategories();
+		var btnListCategories = $("#btnListCategories");
+
+		// Remove previous categories
+		btnListCategories.empty();
+		
+		// A map specifying the selected categories is attached to the DOM element containing categories
+		var mapSelCategories = {};
+		btnListCategories.data("mapSelCategories", mapSelCategories);
+		
+		// Add newly retrieved categories
+		for(var c = 0; c < arrCategories.length; c++) {
+			// Create a DOM button corresponding to each category
+			btnListCategories.append("<button type='button' class='btn btn-default' " + 
+					"onclick='toggleCategory(\"" + arrCategories[c].uri + "\")'>" + arrCategories[c].name + "</button>");
+
+			// Add the category to the map of selected categories, as unselected
+			mapSelCategories[arrCategories[c].uri] = false;
+		}
+	}
+
+	// Add/remove the toggled category to/from the set of selected categories
+	function toggleCategory(selected) {		
+		// A map specifying the selected categories should be attached to the DOM element containing categories 
+		// (loadCategories should've been already executed)
+		var mapSelCategories = $("#btnListCategories").data("mapSelCategories");
+
+		// Mark the category as selected/not-selected depending on its previous state
+		if(mapSelCategories[selected] === false) {
+			mapSelCategories[selected] = true;
+		} else {
+			mapSelCategories[selected] = false;
+		}
+		
+		handleChangeSelCategories();
+	}
+
+	// Updates the UI according to the newly selected set of categories
+	function handleChangeSelCategories() {
+		// A map specifying the selected categories is attached to the DOM element containing categories
+		var mapSelCategories = $("#btnListCategories").data("mapSelCategories") || {};
+
+		// Build an array containing the selected categories, to be send as argument to the methods requiring such info
+		var arrSelCategories = new Array();
+
+		// Determine the selected categories by examining the properties of the map containing them as properties (set to true)
+		for(var selCatProp in mapSelCategories) {
+			if(Object.prototype.hasOwnProperty.call(mapSelCategories, selCatProp)) {
+				if(mapSelCategories[selCatProp] === true) {
+					arrSelCategories.push(selCatProp);
+				}
+			}
+		}
+
+		console.debug("Selected categories: " + arrSelCategories);
+	}
 
 </script>

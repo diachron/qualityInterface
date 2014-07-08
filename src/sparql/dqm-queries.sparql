@@ -1,0 +1,13 @@
+PREFIX dqm: <http://www.diachron-fp7.eu/dqm#>
+PREFIX daq: <http://purl.org/eis/vocab/daq#>
+
+SELECT DISTINCT ?category_name
+WHERE
+{ ?category_name rdfs:subClassOf daq:Category }
+
+PREFIX dqm: <http://www.diachron-fp7.eu/dqm#>
+PREFIX daq: <http://purl.org/eis/vocab/daq#>
+
+SELECT DISTINCT 
+WHERE
+{ ?category_name rdfs:subClassOf daq:Category }

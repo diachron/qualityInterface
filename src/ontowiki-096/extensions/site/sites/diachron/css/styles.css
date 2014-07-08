@@ -27,3 +27,19 @@
 .controls-bar {
 	padding: 7px;
 }
+
+#lst-datasets .lst-datasets-actions {
+	margin-top: 7px;
+}
+
+#lst-datasets .lst-datasets-actions button {
+	font-weight: bold;
+}
+
+.btn-list {
+	width: 100%;
+}
+
+.btn-list button {
+	text-align: left;	
+}
