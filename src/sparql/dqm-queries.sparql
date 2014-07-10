@@ -8,6 +8,16 @@ WHERE
 PREFIX dqm: <http://www.diachron-fp7.eu/dqm#>
 PREFIX daq: <http://purl.org/eis/vocab/daq#>
 
-SELECT DISTINCT 
+SELECT ?category_uri ?dimension_uri ?metric_uri
 WHERE
-{ ?category_name rdfs:subClassOf daq:Category }
+{
+	?has_dimension_metric rdfs:subPropertyOf daq:hasMetric.
+	?has_dimension_metric rdfs:domain ?dimension_uri .
+	?has_dimension_metric rdfs:range ?metric_uri .
+	?has_category_dim rdfs:range ?dimension_uri .
+	?has_category_dim rdfs:subPropertyOf daq:hasDimension.
+	?has_category_dim rdfs:domain ?category_uri .
+}
+ORDER BY ASC(?category_uri) ASC(?dimension_uri) ASC(?metric_uri) 
+
+LIMIT 500

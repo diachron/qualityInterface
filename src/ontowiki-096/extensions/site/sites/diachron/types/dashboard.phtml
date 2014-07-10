@@ -12,22 +12,21 @@
 				  <div class="panel-heading">Category</div>
 				  <div class="panel-body">
 				  	<div id="btnListCategories" class="btn-group-vertical btn-group-sm btn-list" data-toggle="buttons">
-				  		<button type="button" class="btn btn-default">Accessibility</button>
-				  		<button type="button" class="btn btn-default">Intrinsic</button>
-				  		<button type="button" class="btn btn-default">Performance</button>
 					</div>
 				  </div>
 				</div>
 				<div class="panel panel-default">
 				  <div class="panel-heading">Dimension</div>
 				  <div class="panel-body">
-				  	...
+				  	<div id="btnListDimensions" class="btn-group-vertical btn-group-sm btn-list" data-toggle="buttons">
+					</div>
 				  </div>
 				</div>
 				<div class="panel panel-default">
 				  <div class="panel-heading">Metric</div>
 				  <div class="panel-body">
-				  	...
+				  	<div id="btnListMetrics" class="btn-group-vertical btn-group-sm btn-list" data-toggle="buttons">
+					</div>
 				  </div>
 				</div>
 			</div>
@@ -98,11 +97,15 @@
 
 <script type="text/javascript">
 
+	// An object containing the hierarchy of categories -> dimensions -> metrics
+	var metricsSet = null;
+
 	// Document ready event handler
 	$(function() {
-		// Load quality categories
-		loadCategories();
-		
+		// Load quality categories, dimensions and metrics
+		loadAvailableMetrics();
+		buildCategoriesList();
+		buildDimensionsList();
 	});
 
 	$('#tab-container a').click(function (e) {
@@ -113,10 +116,41 @@
 	$('#lst-datasets .list-group-item').click(function (e) {
 	  e.preventDefault();
 	});
+
+	function loadAvailableMetrics() {
+		// Retrieve existing metrics from the Quality knowledgebase
+		var arrMetrics = lodDataAccess.selectMetrics();
+		
+		// Build a convenient mapped representation of the hierarchy of categories -> dimensions -> metrics
+		metricsSet = {};
+		var curMetric = null;
+		var curCategory = null;
+		var curDimension = null;
+		
+		for(var m = 0; m < arrMetrics.length; m++) {
+			curMetric = arrMetrics[m];
+			
+			// Check if the current category has already been added to the set
+			curCategory = metricsSet[curMetric.category_name];
+			if(curCategory === undefined || curCategory === null) {
+				curCategory = {};
+				metricsSet[curMetric.category_name] = curCategory;
+			}
+
+			// Check if the current dimension has already been added to the category
+			curDimension = curCategory[curMetric.dimension_name];
+			if(curDimension === undefined || curDimension === null) {
+				curDimension = new Array();
+				curCategory[curMetric.dimension_name] = curDimension;
+			}
+
+			// Add the current metric to the dimension, which is an array of metrics
+			curDimension.push({ name: curMetric.metric_name, uri: curMetric.metric_uri });
+		}
+	}
 	
 	// Load quality categories defined in the DQM knowledgebase and fill the category-selection list
-	function loadCategories() {
-		var arrCategories = lodDataAccess.selectCategories();
+	function buildCategoriesList() {
 		var btnListCategories = $("#btnListCategories");
 
 		// Remove previous categories
@@ -126,15 +160,15 @@
 		var mapSelCategories = {};
 		btnListCategories.data("mapSelCategories", mapSelCategories);
 		
-		// Add newly retrieved categories
-		for(var c = 0; c < arrCategories.length; c++) {
+		// Add elements to buttons list of categories
+		$.map(metricsSet, function(categoryObj, curCatName) {
 			// Create a DOM button corresponding to each category
 			btnListCategories.append("<button type='button' class='btn btn-default' " + 
-					"onclick='toggleCategory(\"" + arrCategories[c].uri + "\")'>" + arrCategories[c].name + "</button>");
+					"onclick='toggleCategory(\"" + curCatName + "\")'>" + curCatName + "</button>");
 
 			// Add the category to the map of selected categories, as unselected
-			mapSelCategories[arrCategories[c].uri] = false;
-		}
+			mapSelCategories[curCatName] = false;
+		});
 	}
 
 	// Add/remove the toggled category to/from the set of selected categories
@@ -144,33 +178,39 @@
 		var mapSelCategories = $("#btnListCategories").data("mapSelCategories");
 
 		// Mark the category as selected/not-selected depending on its previous state
-		if(mapSelCategories[selected] === false) {
-			mapSelCategories[selected] = true;
-		} else {
-			mapSelCategories[selected] = false;
-		}
-		
-		handleChangeSelCategories();
+		mapSelCategories[selected] = !(mapSelCategories[selected]);
+
+		// Update buttons list corresponding to the dimensions of the selected categories
+		buildDimensionsList();
 	}
 
-	// Updates the UI according to the newly selected set of categories
-	function handleChangeSelCategories() {
-		// A map specifying the selected categories is attached to the DOM element containing categories
-		var mapSelCategories = $("#btnListCategories").data("mapSelCategories") || {};
+	// Load quality dimensions defined in the DQM knowledgebase and fill the dimension-selection list
+	function buildDimensionsList() {
+		var btnListDimensions = $("#btnListDimensions");
+		var mapSelCategories = $("#btnListCategories").data("mapSelCategories");
 
-		// Build an array containing the selected categories, to be send as argument to the methods requiring such info
-		var arrSelCategories = new Array();
+		// Remove previous dimensions
+		btnListDimensions.empty();
+		
+		// A map specifying the selected dimensions is attached to the DOM element containing dimensions
+		var mapSelDimensions = {};
+		btnListDimensions.data("mapSelDimensions", mapSelDimensions);
 
-		// Determine the selected categories by examining the properties of the map containing them as properties (set to true)
-		for(var selCatProp in mapSelCategories) {
-			if(Object.prototype.hasOwnProperty.call(mapSelCategories, selCatProp)) {
-				if(mapSelCategories[selCatProp] === true) {
-					arrSelCategories.push(selCatProp);
-				}
+		// Extract the dimensions of each selected category
+		$.map(mapSelCategories, function(isCatSelected, curCatName) {
+			// Show the dimensions of the selected categories only
+			if(isCatSelected) {
+				// Add elements to buttons list of dimensions
+				$.map(metricsSet[curCatName], function(dimensionObj, curDimName) {
+					// Create a DOM button corresponding to each dimension
+					btnListDimensions.append("<button type='button' class='btn btn-default' " + 
+							"onclick='toggleDimension(\"" + curDimName + "\")'>" + curDimName + "</button>");
+
+					// Add the category to the map of selected categories, as unselected
+					mapSelDimensions[curDimName] = false;
+				});
 			}
-		}
-
-		console.debug("Selected categories: " + arrSelCategories);
+		});
 	}
 
 </script>
