@@ -104,8 +104,6 @@
 	$(function() {
 		// Load quality categories, dimensions and metrics
 		loadAvailableMetrics();
-		buildCategoriesList();
-		buildDimensionsList();
 	});
 
 	$('#tab-container a').click(function (e) {
@@ -117,9 +115,20 @@
 	  e.preventDefault();
 	});
 
+	// Loads the categories, dimensions and metrics defined in the DQM knowledgebase and 
+	// creates the UI elements representing them
 	function loadAvailableMetrics() {
 		// Retrieve existing metrics from the Quality knowledgebase
 		var arrMetrics = lodDataAccess.selectMetrics();
+
+		var btnListCategories = $("#btnListCategories");
+		var btnListDimensions = $("#btnListDimensions");
+		var btnListMetrics = $("#btnListMetrics");
+
+		// Remove buttons of previous categories, dimensions and metrics
+		btnListCategories.empty();
+		btnListDimensions.empty();
+		btnListMetrics.empty();
 		
 		// Build a convenient mapped representation of the hierarchy of categories -> dimensions -> metrics
 		metricsSet = {};
@@ -133,84 +142,92 @@
 			// Check if the current category has already been added to the set
 			curCategory = metricsSet[curMetric.category_name];
 			if(curCategory === undefined || curCategory === null) {
-				curCategory = {};
+				curCategory = { name: curMetric.category_name, selected: false, dimensions: {} };
 				metricsSet[curMetric.category_name] = curCategory;
+
+				// Create a DOM button corresponding to the newly added category
+				btnListCategories.append("<button type='button' id='btnSel_" + curMetric.category_name + "' class='btn btn-default' onclick='toggleCategory(\"" + curMetric.category_name + "\")'>" + curMetric.category_name + "</button>");
 			}
 
 			// Check if the current dimension has already been added to the category
-			curDimension = curCategory[curMetric.dimension_name];
+			curDimension = curCategory.dimensions[curMetric.dimension_uri];
 			if(curDimension === undefined || curDimension === null) {
-				curDimension = new Array();
-				curCategory[curMetric.dimension_name] = curDimension;
+				curDimension = { name: curMetric.dimension_name, selected: false, metrics: new Array() };
+				curCategory.dimensions[curMetric.dimension_uri] = curDimension;
+
+				// Create a DOM button corresponding to the newly added dimension (hidden by default)
+				btnListDimensions.append("<button type='button' id='btnSel_" + curMetric.category_name + "_" + curMetric.dimension_name + "' style='display:none' class='btn btn-default' onclick='toggleDimension(\"" + curMetric.category_name + "\", \"" + curMetric.dimension_uri + "\")'>" + curMetric.dimension_name + "</button>");
 			}
 
 			// Add the current metric to the dimension, which is an array of metrics
-			curDimension.push({ name: curMetric.metric_name, uri: curMetric.metric_uri });
+			curDimension.metrics.push({ name: curMetric.metric_name, uri: curMetric.metric_uri, selected: false });
+
+			// Create a DOM button corresponding to each metric (hidden by default)
+			btnListMetrics.append("<button type='button' id='btnSel_" + curMetric.category_name + "_" + curMetric.dimension_name + "_" + curMetric.metric_name + "' style='display:none' class='btn btn-default' onclick='toggleMetric(\"" + curMetric.category_name + "\", \"" + curMetric.dimension_uri + "\", \"" + curMetric.metric_uri + "\")'>" + curMetric.metric_name + "</button>");
 		}
-	}
-	
-	// Load quality categories defined in the DQM knowledgebase and fill the category-selection list
-	function buildCategoriesList() {
-		var btnListCategories = $("#btnListCategories");
-
-		// Remove previous categories
-		btnListCategories.empty();
-		
-		// A map specifying the selected categories is attached to the DOM element containing categories
-		var mapSelCategories = {};
-		btnListCategories.data("mapSelCategories", mapSelCategories);
-		
-		// Add elements to buttons list of categories
-		$.map(metricsSet, function(categoryObj, curCatName) {
-			// Create a DOM button corresponding to each category
-			btnListCategories.append("<button type='button' class='btn btn-default' " + 
-					"onclick='toggleCategory(\"" + curCatName + "\")'>" + curCatName + "</button>");
-
-			// Add the category to the map of selected categories, as unselected
-			mapSelCategories[curCatName] = false;
-		});
 	}
 
 	// Add/remove the toggled category to/from the set of selected categories
-	function toggleCategory(selected) {		
-		// A map specifying the selected categories should be attached to the DOM element containing categories 
-		// (loadCategories should've been already executed)
-		var mapSelCategories = $("#btnListCategories").data("mapSelCategories");
+	function toggleCategory(selected) {
 
-		// Mark the category as selected/not-selected depending on its previous state
-		mapSelCategories[selected] = !(mapSelCategories[selected]);
+		var btnListDimensions = $("#btnListDimensions");
+		var btnListMetrics = $("#btnListMetrics");
+		var newState = !(metricsSet[selected].selected);
+		
+		// Update category state
+		metricsSet[selected].selected = newState;
 
-		// Update buttons list corresponding to the dimensions of the selected categories
-		buildDimensionsList();
+		// Update UI
+		if(newState) {
+			// Show buttons corresponding to the dimensions of the selected category
+			$.map(metricsSet[selected].dimensions, function(dimensionObj, dimensionURI) {
+				$("#btnSel_" + selected + "_" + dimensionObj.name, btnListDimensions).show();
+			});
+		} else {
+			// Uncheck dimensions of the selected category
+			$.map(metricsSet[selected].dimensions, function(dimensionObj, dimensionURI) {
+				$("#btnSel_" + selected + "_" + dimensionObj.name, btnListDimensions).hide().removeClass("active");
+				dimensionObj.selected = false;
+
+				// Uncheck metrics of the selected dimension
+				$.map(dimensionObj.metrics, function(metricObj) {
+					$("#btnSel_" + selected + "_" + dimensionObj.name + "_" + metricObj.name, btnListMetrics).hide().removeClass("active");
+					metricObj.selected = false;
+				});
+			});
+		}
 	}
 
-	// Load quality dimensions defined in the DQM knowledgebase and fill the dimension-selection list
-	function buildDimensionsList() {
+	// Toggle the selected status of a dimension, given its URI and the name of the category it belongs to
+	function toggleDimension(categoryName, dimensionURI) {
+
+		var dimensionObj = metricsSet[categoryName].dimensions[dimensionURI];
 		var btnListDimensions = $("#btnListDimensions");
-		var mapSelCategories = $("#btnListCategories").data("mapSelCategories");
+		var btnListMetrics = $("#btnListMetrics");
+		var newState = !(dimensionObj.selected);
 
-		// Remove previous dimensions
-		btnListDimensions.empty();
-		
-		// A map specifying the selected dimensions is attached to the DOM element containing dimensions
-		var mapSelDimensions = {};
-		btnListDimensions.data("mapSelDimensions", mapSelDimensions);
+		// Update dimension state
+		dimensionObj.selected = newState;
 
-		// Extract the dimensions of each selected category
-		$.map(mapSelCategories, function(isCatSelected, curCatName) {
-			// Show the dimensions of the selected categories only
-			if(isCatSelected) {
-				// Add elements to buttons list of dimensions
-				$.map(metricsSet[curCatName], function(dimensionObj, curDimName) {
-					// Create a DOM button corresponding to each dimension
-					btnListDimensions.append("<button type='button' class='btn btn-default' " + 
-							"onclick='toggleDimension(\"" + curDimName + "\")'>" + curDimName + "</button>");
+		// Update UI
+		if(newState) {
+			// Show buttons corresponding to the metrics of the selected dimension
+			$.map(dimensionObj.metrics, function(metricObj) {
+				$("#btnSel_" + categoryName + "_" + dimensionObj.name + "_" + metricObj.name, btnListMetrics).show();
+			});
+		} else {
+			// Uncheck metrics of the selected dimension
+			$.map(dimensionObj.metrics, function(metricObj) {
+				$("#btnSel_" + categoryName + "_" + dimensionObj.name + "_" + metricObj.name, btnListMetrics).hide().removeClass("active");
+				metricObj.selected = false;
+			});
+		}
+	}
 
-					// Add the category to the map of selected categories, as unselected
-					mapSelDimensions[curDimName] = false;
-				});
-			}
-		});
+	// Toggle the selected status of a metric, given its URI and the names  
+	// of the dimension and category it belongs to 
+	function toggleMetric(categoryName, dimensionURI, metricURI) {
+		// TODO: Implement
 	}
 
 </script>
