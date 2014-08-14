@@ -511,7 +511,7 @@ ORDER BY DESC(?modified)';
     {
         $this->loadModel();
         $this->_loadResource();
-
+                
         // prepare view
         $moduleTemplatePath = $this->_componentRoot
                             . $this->_relativeTemplatePath
@@ -547,18 +547,18 @@ ORDER BY DESC(?modified)';
             ->setHelperPath(ONTOWIKI_ROOT . 'application/classes/OntoWiki/View/Helper', 'OntoWiki_View_Helper');
 
         $view->strictVars(defined('_OWDEBUG'));
-
+        
         // TODO merge with Controller::Base
         $view->themeUrlBase   = $config->themeUrlBase;
         $view->urlBase        = $config->urlBase;
         $view->staticUrlBase  = $config->staticUrlBase;
-        $view->libraryUrlBase = $config->staticUrlBase . 'libraries/';
+        $view->libraryUrlBase = $config->staticUrlBase . 'libraries/';        
 
         $cache = array(
             'code'    => 200,
             'headers' => array('Content-Type' => 'text/html; encoding=utf-8'),
         );
-
+        
         $templatePath = $this->_owApp->extensionManager->getComponentTemplatePath('site');
         $mainTemplate = sprintf('%s/%s', $this->_site, static::MAIN_TEMPLATE_NAME);
 
@@ -619,11 +619,63 @@ ORDER BY DESC(?modified)';
         $view->assign($this->_getTemplateData($view));
         // this allows for easy re-assignment of everything
         $view->templateData = $this->_getTemplateData($view);
-
+        
+        $this->_setupCubeViz($view);
+                
         // generate the page body
         $cache['body'] = $view->render($mainTemplate);
 
         return $cache;
+    }
+    
+    // TODO: check if useful, remove otherwise
+    private function _setupCubeViz($view) {
+
+    	CubeViz_ViewHelper::$isCubeVizIndexLoaded = true;
+    	$request    = Zend_Controller_Front::getInstance()->getRequest();
+    	$action     = $request->getActionName();
+    	
+    	/**
+    	 * Load model information
+    	 */
+    	$model = $this->_owApp->selectedModel;
+    	$modelIri = $model->getModelIri();
+    	$modelStore = $model->getStore();
+    	$modelInformation = CubeViz_ViewHelper::getModelInformation($modelStore, $model, $modelIri);
+    	$modelInformation ['rdfs:label'] = true === isset($modelInformation ['http://www.w3.org/2000/01/rdf-schema#label'])
+    		? $modelInformation ['http://www.w3.org/2000/01/rdf-schema#label']['content']
+    		: $modelIri;
+    	
+    	$basePath = $this->_config->staticUrlBase . 'extensions/cubeviz/';
+    	$baseImagesPath = $basePath .'public/images/';
+    	$this->view->translate = $this->_owApp->translate;
+    	$dimensionElementLimit = 100;
+    	$titleHelperLimit = 400;
+    	
+    	$serviceUrl = true === isset($_SESSION ['ONTOWIKI']['serviceUrl'])
+    		? $_SESSION ['ONTOWIKI']['serviceUrl']
+    		: null;
+
+    	// init cubeVizApp
+    		$config = CubeViz_ViewHelper::initApp(
+    				$this->view,
+    				$model,
+    				$this->_owApp->getConfig()->store->backend,
+    				$this->_privateConfig->get('context'),
+    				$modelIri,
+    				$serviceUrl,
+    				$this->_config->staticUrlBase,
+    				$baseImagesPath,
+    				$request->getParam('cv_dataHash'),
+    				$request->getParam('cv_uiHash'),
+    				$modelInformation,
+    				$titleHelperLimit,
+    				$dimensionElementLimit
+    		);
+
+    	$view->headScript()
+    		->appendScript('cubeVizApp._ = '. json_encode($config, JSON_FORCE_OBJECT) .';')
+    		->appendScript('cubeVizApp._.backend.chartConfig = CubeViz_ChartConfig;');
     }
 
     protected function _cacheId($uri)

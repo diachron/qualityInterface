@@ -119,7 +119,7 @@ class SiteController extends OntoWiki_Controller_Component
         print("Sitemap: ".$this->_config->urlBase."site/sitemap");
         exit;
     }
-
+    
     /**
      *  Renders and prints sitemap XML.
      *  For gzip compression add paramter "compression" with compression method "bzip" or "gzip" as value.
@@ -199,7 +199,7 @@ class SiteController extends OntoWiki_Controller_Component
     {
         $action = $this->_request->getActionName();
         $router = $this->_owApp->getBootstrap()->getResource('Router');
-
+        
         if ($router->hasRoute('empty')) {
             $emptyRoute    = $router->getRoute('empty');
             $defaults      = $emptyRoute->getDefaults();
@@ -216,7 +216,8 @@ class SiteController extends OntoWiki_Controller_Component
 
         $this->getComponentHelper()->setSite($this->_site);
 
-        $cache = $this->getComponentHelper()->loadCache();
+        // TODO: re-enable cache!
+        $cache = null; // $this->getComponentHelper()->loadCache();
         if (!$cache) {
             $cache = $this->getComponentHelper()->makeCache();
         }
@@ -226,6 +227,7 @@ class SiteController extends OntoWiki_Controller_Component
         foreach ($cache['headers'] as $header => $content) {
             $this->_response->setHeader($header, $content);
         }
+
         $this->_response->setBody($cache['body']);
     }
 

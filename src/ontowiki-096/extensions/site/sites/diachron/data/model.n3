@@ -15,6 +15,7 @@
 
 <Navigation/Main> a site:Navigation ;
                   rdf:_1 <Dashboard> ;
+                  rdf:_2 <Statistics> ;
                   rdfs:label "Main Navigation" .
 
 <Welcome> a foaf:Document ;
@@ -44,6 +45,11 @@ You can find further information about the extension on its [github page](https:
           rdfs:label "Dashboard"@en, "Instrumentenbrett"@de ;
           site:content "Quality dashboard."^^sysont:Markdown ;
           site:template "dashboard" .
+          
+<Statistics> a foaf:Document ;
+          rdfs:label "Statistics"@en, "Statistiken"@de ;
+          site:content "Quality statistics."^^sysont:Markdown ;
+          site:template "statistics" .
 
 foaf:Document site:classTemplate "document" .
 
