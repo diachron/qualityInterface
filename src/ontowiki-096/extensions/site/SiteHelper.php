@@ -620,58 +620,70 @@ ORDER BY DESC(?modified)';
         // this allows for easy re-assignment of everything
         $view->templateData = $this->_getTemplateData($view);
         
-        $this->_setupCubeViz($view);
-                
+        // setup CubeViz only for the pages embedding it
+        if($view->templateData['title'] === 'Statistics') {
+        	$this->_setupCubeViz($view);
+        }
+
         // generate the page body
         $cache['body'] = $view->render($mainTemplate);
 
         return $cache;
     }
-    
-    // TODO: check if useful, remove otherwise
+
+    // Setup the CubeViz extension, so that it's ready to be embedded in the pages making use of it
     private function _setupCubeViz($view) {
 
-    	CubeViz_ViewHelper::$isCubeVizIndexLoaded = true;
+    	$siteConfig = $this->getSiteConfig();
     	$request    = Zend_Controller_Front::getInstance()->getRequest();
     	$action     = $request->getActionName();
-    	
+
     	/**
     	 * Load model information
     	 */
-    	$model = $this->_owApp->selectedModel;
-    	$modelIri = $model->getModelIri();
-    	$modelStore = $model->getStore();
+    	$modelIri = $request->getParam('m');
+    	
+    	// check if model was specified as parameter
+    	if (!isset($modelIri) || ($modelIri === '')) {
+    		$modelIri = $siteConfig['model'];
+    	}
+    	
+    	// load the model specified as parameter, which ought to contain a valid, cube dataset
+    	$modelStore = OntoWiki::getInstance()->erfurt->getStore();
+    	$model = $modelStore->getModel($modelIri);
+    	
     	$modelInformation = CubeViz_ViewHelper::getModelInformation($modelStore, $model, $modelIri);
     	$modelInformation ['rdfs:label'] = true === isset($modelInformation ['http://www.w3.org/2000/01/rdf-schema#label'])
     		? $modelInformation ['http://www.w3.org/2000/01/rdf-schema#label']['content']
     		: $modelIri;
     	
     	$basePath = $this->_config->staticUrlBase . 'extensions/cubeviz/';
-    	$baseImagesPath = $basePath .'public/images/';
-    	$this->view->translate = $this->_owApp->translate;
+    	$baseImagesPath = $basePath . 'public/images/';
     	$dimensionElementLimit = 100;
     	$titleHelperLimit = 400;
     	
     	$serviceUrl = true === isset($_SESSION ['ONTOWIKI']['serviceUrl'])
     		? $_SESSION ['ONTOWIKI']['serviceUrl']
     		: null;
-
-    	// init cubeVizApp
-    		$config = CubeViz_ViewHelper::initApp(
-    				$this->view,
-    				$model,
-    				$this->_owApp->getConfig()->store->backend,
-    				$this->_privateConfig->get('context'),
-    				$modelIri,
-    				$serviceUrl,
-    				$this->_config->staticUrlBase,
-    				$baseImagesPath,
-    				$request->getParam('cv_dataHash'),
-    				$request->getParam('cv_uiHash'),
-    				$modelInformation,
-    				$titleHelperLimit,
-    				$dimensionElementLimit
-    		);
+    	    		
+    	CubeViz_ViewHelper::$isCubeVizIndexLoaded = true;
+    		
+	    // init cubeVizApp
+    	$config = CubeViz_ViewHelper::initApp(
+    			$view,
+    			$model,
+    			$this->_owApp->getConfig()->store->backend,
+    			$this->_privateConfig->get('context'),
+    			$modelIri,
+    			$serviceUrl,
+    			$this->_config->staticUrlBase,
+    			$baseImagesPath,
+    			$request->getParam('cv_dataHash'),
+    			$request->getParam('cv_uiHash'),
+    			$modelInformation,
+    			$titleHelperLimit,
+    			$dimensionElementLimit
+    	);
 
     	$view->headScript()
     		->appendScript('cubeVizApp._ = '. json_encode($config, JSON_FORCE_OBJECT) .';')
@@ -781,7 +793,7 @@ ORDER BY DESC(?modified)';
     public function loadModel()
     {
         $siteConfig = $this->getSiteConfig();
-
+        
         // m is automatically used and selected
         if ((!isset($this->_request->m)) && (!$this->_owApp->selectedModel)) {
             // TODO: what if no site model configured?

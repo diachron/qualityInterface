@@ -1,6 +1,6 @@
 <ul id="tab-container" class="nav nav-tabs" role="tablist">
 	<li class="active"><a href="#detail">Detail</a></li>
-	<li><a href="#stats">Statistics</a></li>
+	<li><a href="Statistics">Statistics</a></li>
 	<li><a href="#assessment">Assessment</a></li>
 </ul>
 <div class="tab-content">
@@ -106,11 +106,6 @@
 		loadAvailableMetrics();
 	});
 
-	$('#tab-container a').click(function (e) {
-	  e.preventDefault();
-	  $(this).tab('show');
-	});
-	
 	$('#lst-datasets .list-group-item').click(function (e) {
 	  e.preventDefault();
 	});

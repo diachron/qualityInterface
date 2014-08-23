@@ -10,588 +10,596 @@
 	body.setAttribute("class", bodyClass, 0);
 </script>
 
-<div class="section-mainwindows ">
-	<div class="window">
-		<h1 class="title">Visualization for Dataset Quality Graph</h1>
-		<div class="slidehelper">
-			<div class="content">
-				<script type="text/javascript">
-					cubeVizApp._.backend.uiParts.index.isLoaded = true;
-				
-					// ui settings to adapt user interface
-					cubeVizApp._.backend.uiSettings.useDataSetInsteadOfModel = true;
-				    
-					cubeVizApp
-						.add("View_IndexAction_Header", "#cubeviz-index-headerDialogBox")
-						.add("View_IndexAction_Visualization", "#cubeviz-index-visualization")
-						.add("View_IndexAction_VisualizationSelector", "#cubeviz-visualizationselector-menuItems")
-						.add("View_IndexAction_Legend", "")
-						.add("View_IndexAction_ExportArea", "");
-				</script>
-
-				<div style="margin-left: 6px; margin-top: 10px;">
-
-					<!-- Visualization selector -->
-					<div style="float: right;">
-						<div id="cubeviz-visualizationselector-selector"></div>
-					</div>
-
-					<!-- Header -->
-					<div id="cubeviz-index-headerContainer" style="float: left;">
-						<h2 id="cubeviz-index-header"></h2>
-						<div id="cubeviz-index-headerSubheadline"></div>
-					</div>
-
-					<div style="clear: both;"></div>
-
-					<!-- Visualization -->
-					<div id="cubeviz-index-visualization"></div>
-
-					<!-- Export area -->
-					<div id="cubeviz-index-exportArea">
-						<strong>Export as</strong> &nbsp; 
-						<a id="cubeviz-index-exportArea-btnTurtle" title="Export as RDF/Turtle"> 
-							<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/turtle.png" style="width: 20px;" />
-						</a> &nbsp; 
-						<a id="cubeviz-index-exportArea-btnCsv" title="Export as CSV"> 
-							<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/csv2.png" style="width: 17px;" />
-						</a>
-					</div>
-
-					<!-- removed block 1: Legend -->
-					
-					<div style="clear: both;"></div>
-
-					<!-- removed block 2: Visualization selector -->
-				</div>
-
-				<div id="cubeviz-index-headerDialogBox"></div>
-
-				<!-- TEMPLATES (text/template) -->
-				<!-- Header -->
-				<div id="cubeviz-index-tpl-header" style="display: none;">[[modelLabel]]</div>
-				<div id="cubeviz-index-tpl-headerSubheadline" style="display: none;">[[selectedDataSet]]</div>
-				<div id="cubeviz-index-tpl-headerSubheadlineButtons" style="display: none;"> &nbsp; &nbsp; 
-					<i class="icon-lightbulb"></i> 
-					<a class="cubeviz-clickable" id="cubeviz-index-headerQuestionMarkHeadline" title="Click For More Information">Show MetaData</a>
-				</div>
-
-				<!-- Visualization selection menu -->
-				<div id="cubeviz-visualizationselector-tpl-selectorItem" style="display: none;">
-					<a class="btn cubeviz-visualizationselector-selectorItem"> 
-						<img class="cubeviz-icon-small" src="" />
-					</a>
-				</div>
-
-				<div id="cubeviz-visualizationselector-tpl-menuItem" style="display: none;">
-					<div class="cubeviz-visualizationselector-menuItem" style="clear: both;">
-						<div style="float: left; margin-left: 3px;">[[label]]</div>
-						<div style="float: right">
-							<select class="cubeviz-visualizationselector-menuSelectbox cubeviz-visualizationselector-menuItemValue"></select>
-						</div>
-					</div>
-				</div>
-
-				<!-- Dialog box for questionmark in headline (cubeviz-index-headerDialogBox) -->
-				<div id="cubeviz-index-tpl-headerDialogBoxHead" style="display: none;">
-					<div style="margin-top: 4px; float: right; clear: both;">
-						<img class="cubeviz-icon-unsized" src="http://localhost/ontowiki/extensions/cubeviz/public/images/cubevizLogo.png" />
-					</div>
-					<h4>Metadata about the dataset "[[label]]"</h4>
-					<ul id="cubeviz-index-headerDialogBoxModelInformation"></ul>
-				</div>
-
-				<div id="cubeviz-index-tpl-headerDialogBoxEntry" style="display: none;">
-					<li class="cubeviz-index-headerDialogBoxEntry"><strong>[[predicateLabel]]</strong>
-						<div class="cubeviz-index-headerDialogBoxEntryContent">[[objectContent]]</div>
-					</li>
-				</div>
-
-				<!-- notification if no data were received -->
-				<div id="cubeviz-visualization-tpl-nothingFoundNotification" style="display: none;">
-					<div id="cubeviz-visualization-nothingFoundNotification" align="center">
-						<h4>No data fits to your selection, please adapt your selection in the left sidebar manually.</h4>
-						<br />
-						<div style="width: 50%; text-align: left;">
-							<div style="float: left;">
-								<i class="icon-lightbulb"></i>
+<ul id="tab-container" class="nav nav-tabs" role="tablist">
+	<li><a href="Dashboard">Detail</a></li>
+	<li class="active"><a href="Statistics">Statistics</a></li>
+	<li><a href="#assessment">Assessment</a></li>
+</ul>
+<div class="tab-content">
+	<div class="tab-pane active" style="position:relative; top:-8px;">
+		<div style="float:left; clear:both;">
+			<div style="width:750px; float:right;">
+				<div class="window">
+					<h1 class="title">Visualization for Dataset Quality Graph</h1>
+					<div class="slidehelper">
+						<div class="content">
+							<script type="text/javascript">				
+								// ui settings to adapt user interface
+								cubeVizApp._.backend.uiSettings.useDataSetInsteadOfModel = true;
+							    
+								cubeVizApp
+									.add("View_IndexAction_Header", "#cubeviz-index-headerDialogBox")
+									.add("View_IndexAction_Visualization", "#cubeviz-index-visualization")
+									.add("View_IndexAction_VisualizationSelector", "#cubeviz-visualizationselector-menuItems")
+									.add("View_IndexAction_Legend", "")
+									.add("View_IndexAction_ExportArea", "");
+							</script>
+			
+							<div style="margin-left: 6px; margin-top: 10px;">
+			
+								<!-- Visualization selector -->
+								<div style="float: right;">
+									<div id="cubeviz-visualizationselector-selector"></div>
+								</div>
+			
+								<!-- Header -->
+								<div id="cubeviz-index-headerContainer" style="float: left;">
+									<h2 id="cubeviz-index-header"></h2>
+									<div id="cubeviz-index-headerSubheadline"></div>
+								</div>
+			
+								<div style="clear: both;"></div>
+			
+								<!-- Visualization -->
+								<div id="cubeviz-index-visualization"></div>
+			
+								<!-- Export area -->
+								<div id="cubeviz-index-exportArea">
+									<strong>Export as</strong> &nbsp; 
+									<a id="cubeviz-index-exportArea-btnTurtle" title="Export as RDF/Turtle"> 
+										<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/turtle.png" style="width: 20px;" />
+									</a> &nbsp; 
+									<a id="cubeviz-index-exportArea-btnCsv" title="Export as CSV"> 
+										<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/csv2.png" style="width: 17px;" />
+									</a>
+								</div>
+			
+								<!-- removed block 1: Legend -->
+								
+								<div style="clear: both;"></div>
+			
+								<!-- removed block 2: Visualization selector -->
 							</div>
-							<div style="margin-left: 24px;">
-								<strong>Explanation</strong>
-								<p>
-									This behavior can have various reasons. On the one hand it is
-									possible that there is no data available according to the
-									selection. In order to reduce the load of the server we decided
-									not to check the availability of data for every selection. <br />
-									<br /> On the other hand it is possible that a chart can not be
-									produced if the user selects inapplicable combinations of
-									options such as a logarithm scale in combination with
-									percentage stacking. Trapping such cases is not yet fully
-									implemented but will be done soon. <br /> <br />To solve such
-									problems we suggest to change the selection and/or the selected
-									chart options.
-								</p>
+			
+							<div id="cubeviz-index-headerDialogBox"></div>
+			
+							<!-- TEMPLATES (text/template) -->
+							<!-- Header -->
+							<div id="cubeviz-index-tpl-header" style="display: none;">[[modelLabel]]</div>
+							<div id="cubeviz-index-tpl-headerSubheadline" style="display: none;">[[selectedDataSet]]</div>
+							<div id="cubeviz-index-tpl-headerSubheadlineButtons" style="display: none;"> &nbsp; &nbsp; 
+								<i class="icon-lightbulb"></i> 
+								<a class="cubeviz-clickable" id="cubeviz-index-headerQuestionMarkHeadline" title="Click For More Information">Show MetaData</a>
+							</div>
+			
+							<!-- Visualization selection menu -->
+							<div id="cubeviz-visualizationselector-tpl-selectorItem" style="display: none;">
+								<a class="btn cubeviz-visualizationselector-selectorItem"> 
+									<img class="cubeviz-icon-small" src="" />
+								</a>
+							</div>
+			
+							<div id="cubeviz-visualizationselector-tpl-menuItem" style="display: none;">
+								<div class="cubeviz-visualizationselector-menuItem" style="clear: both;">
+									<div style="float: left; margin-left: 3px;">[[label]]</div>
+									<div style="float: right">
+										<select class="cubeviz-visualizationselector-menuSelectbox cubeviz-visualizationselector-menuItemValue"></select>
+									</div>
+								</div>
+							</div>
+			
+							<!-- Dialog box for questionmark in headline (cubeviz-index-headerDialogBox) -->
+							<div id="cubeviz-index-tpl-headerDialogBoxHead" style="display: none;">
+								<div style="margin-top: 4px; float: right; clear: both;">
+									<img class="cubeviz-icon-unsized" src="http://localhost/ontowiki/extensions/cubeviz/public/images/cubevizLogo.png" />
+								</div>
+								<h4>Metadata about the dataset "[[label]]"</h4>
+								<ul id="cubeviz-index-headerDialogBoxModelInformation"></ul>
+							</div>
+			
+							<div id="cubeviz-index-tpl-headerDialogBoxEntry" style="display: none;">
+								<li class="cubeviz-index-headerDialogBoxEntry"><strong>[[predicateLabel]]</strong>
+									<div class="cubeviz-index-headerDialogBoxEntryContent">[[objectContent]]</div>
+								</li>
+							</div>
+			
+							<!-- notification if no data were received -->
+							<div id="cubeviz-visualization-tpl-nothingFoundNotification" style="display: none;">
+								<div id="cubeviz-visualization-nothingFoundNotification" align="center">
+									<h4>No data fits to your selection, please adapt your selection in the left sidebar manually.</h4>
+									<br />
+									<div style="width: 50%; text-align: left;">
+										<div style="float: left;">
+											<i class="icon-lightbulb"></i>
+										</div>
+										<div style="margin-left: 24px;">
+											<strong>Explanation</strong>
+											<p>
+												This behavior can have various reasons. On the one hand it is
+												possible that there is no data available according to the
+												selection. In order to reduce the load of the server we decided
+												not to check the availability of data for every selection. <br />
+												<br /> On the other hand it is possible that a chart can not be
+												produced if the user selects inapplicable combinations of
+												options such as a logarithm scale in combination with
+												percentage stacking. Trapping such cases is not yet fully
+												implemented but will be done soon. <br /> <br />To solve such
+												problems we suggest to change the selection and/or the selected
+												chart options.
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<!-- notification if highcharts.com #10 exception appears -->
+							<div id="cubeviz-visualization-tpl-notificationHightchartsException10" style="display: none;">
+								<div align="center">
+									<div id="cubeviz-visualization-notificationHightchartsException10">
+										<h4>
+											That chart can not be created due to the fact that selected
+											data contains zero or subzero values. Please change the
+											configuration in the left sidebar or use another Scale value but
+											not Logarithmic.
+										</h4>
+									</div>
+								</div>
+							</div>
+			
+							<!-- Legend -->
+							<div id="cubeviz-legend-tpl-observationsTableHeadEntry"
+								style="display: none;">
+								<h4>
+									<i class="icon-anchor" style="font-size: 8px;"></i> 
+									<a href="#[[uriHash]]">[[label]]</a> &nbsp;&nbsp; 
+									<i class="cubeviz-legend-sortAsc cubeviz-clickable icon-sort-by-attributes" title="sort ascending"></i> &nbsp; 
+									<i class="cubeviz-legend-sortDesc cubeviz-clickable icon-sort-by-attributes-alt" title="sort descending"></i>
+								</h4>
+							</div>
+			
+							<div id="cubeviz-legend-tpl-dimensionBlock" style="display: none;">
+								<div class="span10">
+									<a name="[[dimensionUriHash]]">
+										<h3>
+											<a href="[[dimensionUri]]" target="_blank">[[dimensionLabel]]</a>
+										</h3>
+									</a>
+									<table class="table table-bordered table-striped responsive-utilities"></table>
+								</div>
+							</div>
+			
+							<!-- Dialog box for questionmark in headline(cubeviz-Index-questionMarkHeadline) -->
+							<div id="cubeviz-legend-componentDimensionInfoDialog"></div>
+			
+							<div id="cubeviz-legend-tpl-componentDimensionInfoHeader" style="display: none;">
+								<div style="float: right;">
+									<img class="cubeviz-icon-unsized" src="http://localhost/ontowiki/extensions/cubeviz/public/images/cubevizLogo.png" />
+								</div>
+								<h5>Metadata about the dimension element "[[__cv_niceLabel]]"</h5>
+							</div>
+			
+							<div id="cubeviz-legend-tpl-componentDimensionInfoList" style="display: none;">
+								<ul class="cubeviz-legend-componentDimensionInfoList"></ul>
+							</div>
+			
+							<div id="cubeviz-legend-tpl-componentDimensionInfoListEntry" style="display: none;">
+								<li><br /> <strong>[[key]]</strong> <br /> [[value]]</li>
 							</div>
 						</div>
+						<!-- .content -->
 					</div>
+					<!-- .slidehelper -->
 				</div>
-				
-				<!-- notification if highcharts.com #10 exception appears -->
-				<div id="cubeviz-visualization-tpl-notificationHightchartsException10" style="display: none;">
-					<div align="center">
-						<div id="cubeviz-visualization-notificationHightchartsException10">
-							<h4>
-								That chart can not be created due to the fact that selected
-								data contains zero or subzero values. Please change the
-								configuration in the left sidebar or use another Scale value but
-								not Logarithmic.
-							</h4>
-						</div>
-					</div>
-				</div>
-
-				<!-- Legend -->
-				<div id="cubeviz-legend-tpl-observationsTableHeadEntry"
-					style="display: none;">
-					<h4>
-						<i class="icon-anchor" style="font-size: 8px;"></i> 
-						<a href="#[[uriHash]]">[[label]]</a> &nbsp;&nbsp; 
-						<i class="cubeviz-legend-sortAsc cubeviz-clickable icon-sort-by-attributes" title="sort ascending"></i> &nbsp; 
-						<i class="cubeviz-legend-sortDesc cubeviz-clickable icon-sort-by-attributes-alt" title="sort descending"></i>
-					</h4>
-				</div>
-
-				<div id="cubeviz-legend-tpl-dimensionBlock" style="display: none;">
-					<div class="span10">
-						<a name="[[dimensionUriHash]]">
-							<h3>
-								<a href="[[dimensionUri]]" target="_blank">[[dimensionLabel]]</a>
-							</h3>
-						</a>
-						<table class="table table-bordered table-striped responsive-utilities"></table>
-					</div>
-				</div>
-
-				<!-- Dialog box for questionmark in headline(cubeviz-Index-questionMarkHeadline) -->
-				<div id="cubeviz-legend-componentDimensionInfoDialog"></div>
-
-				<div id="cubeviz-legend-tpl-componentDimensionInfoHeader" style="display: none;">
-					<div style="float: right;">
-						<img class="cubeviz-icon-unsized" src="http://localhost/ontowiki/extensions/cubeviz/public/images/cubevizLogo.png" />
-					</div>
-					<h5>Metadata about the dimension element "[[__cv_niceLabel]]"</h5>
-				</div>
-
-				<div id="cubeviz-legend-tpl-componentDimensionInfoList" style="display: none;">
-					<ul class="cubeviz-legend-componentDimensionInfoList"></ul>
-				</div>
-
-				<div id="cubeviz-legend-tpl-componentDimensionInfoListEntry" style="display: none;">
-					<li><br /> <strong>[[key]]</strong> <br /> [[value]]</li>
-				</div>
+				<!-- .window -->
 			</div>
-			<!-- .content -->
-		</div>
-		<!-- .slidehelper -->
-	</div>
-	<!-- .window -->
-</div>
-<!-- .section-mainwindows -->
-
-<div class="section-sidewindows">
-	<div class="window " id="dataselection">
-		<h1 class="title">Data Selection</h1>
-		<div class="slidehelper">
-			<div class="content">
-				<script type="text/javascript">
-				    cubeVizApp._.backend.uiParts.dataselectionModule.isLoaded = true;
-				    
-				    cubeVizApp
-				        .add("View_DataselectionModule_DataSet", "")
-				        .add("View_DataselectionModule_Slice", "")
-				        .add("View_DataselectionModule_Attribute", "")
-				        .add("View_DataselectionModule_Measure", "")
-				        .add("View_DataselectionModule_Component", "#cubviz-component-listBox")
-				        .add("View_DataselectionModule_Footer", "#cubeviz-footer-container");
-				</script>
-
-				<!-- left sidebar -->
-
-				<div id="cubeviz-dataSelectionModule-spinner" style="display: none;">
-					<i class="icon-spinner icon-spin" id="cubeviz-dataSelectionModule-spinnerIcon" style="vertical-align: middle;"></i> 
-					<span id="cubeviz-dataSelectionModule-spinnerText"> I am working ...</span>
-				</div>
-
-				<div id="cubeviz-dataSelectionModule-dataSelection">
-					<div class="cubeviz-dataSelectionModule-headline">
-						<div style="float: left;">Select a part of the Dataset</div>
-						<div style="float: right; margin-right: 2px;">
-							<i class="icon-question-sign cubeviz-clickable" id="cubeviz-dataSet-questionmark" title="What is a dataset and why should I select one?"></i>
-						</div>
-					</div>
-
-					<!-- data set -->
-					<div class="cubeviz-dataSelectionModule-leftBlock">
-						<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/dataset2.png" style="width: 17px; margin-left: 10px;" />
-					</div>
-					<div class="cubeviz-dataSelectionModule-middleBlock">
-						<div id="cubeviz-dataSet-label"></div>
-						<div class="cubeviz-dataSelectionModule-smallDescription" id="cubeviz-dataSet-description"></div>
-					</div>
-					<div class="cubeviz-dataSelectionModule-rightBlock">
-						<a id="cubeviz-dataSet-dialogOpener" title="Select elements of interest"> Change</a>
-					</div>
-					<div class="cubeviz-dataSelectionModule-blockSeparator"></div>
-
-					<!-- slice -->
-					<div id="cubeviz-dataSelectionModule-sliceBlock">
-						<div class="cubeviz-dataSelectionModule-headline">
-							<div style="float: left;">Select dataset filter</div>
-							<div style="float: right; margin-right: 2px;">
-								<i class="icon-question-sign cubeviz-clickable" id="cubeviz-slice-questionmark" title="Why do i should use dataset filter?"></i>
+			<!-- .section-mainwindows -->
+			
+			<div style="width:300px; float:right;">
+				<div class="window " id="dataselection">
+					<h1 class="title">Data Selection</h1>
+					<div class="slidehelper">
+						<div class="content">
+							<script type="text/javascript">
+							    cubeVizApp._.backend.uiParts.dataselectionModule.isLoaded = true;
+							    
+							    cubeVizApp
+							        .add("View_DataselectionModule_DataSet", "")
+							        .add("View_DataselectionModule_Slice", "")
+							        .add("View_DataselectionModule_Attribute", "")
+							        .add("View_DataselectionModule_Measure", "")
+							        .add("View_DataselectionModule_Component", "#cubviz-component-listBox")
+							        .add("View_DataselectionModule_Footer", "#cubeviz-footer-container");
+							</script>
+			
+							<!-- left sidebar -->
+			
+							<div id="cubeviz-dataSelectionModule-spinner" style="display: none;">
+								<i class="icon-spinner icon-spin" id="cubeviz-dataSelectionModule-spinnerIcon" style="vertical-align: middle;"></i> 
+								<span id="cubeviz-dataSelectionModule-spinnerText"> I am working ...</span>
+							</div>
+			
+							<div id="cubeviz-dataSelectionModule-dataSelection">
+								<div class="cubeviz-dataSelectionModule-headline">
+									<div style="float: left;">Select a part of the Dataset</div>
+									<div style="float: right; margin-right: 2px;">
+										<i class="icon-question-sign cubeviz-clickable" id="cubeviz-dataSet-questionmark" title="What is a dataset and why should I select one?"></i>
+									</div>
+								</div>
+			
+								<!-- data set -->
+								<div class="cubeviz-dataSelectionModule-leftBlock">
+									<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/dataset2.png" style="width: 17px; margin-left: 10px;" />
+								</div>
+								<div class="cubeviz-dataSelectionModule-middleBlock">
+									<div id="cubeviz-dataSet-label"></div>
+									<div class="cubeviz-dataSelectionModule-smallDescription" id="cubeviz-dataSet-description"></div>
+								</div>
+								<div class="cubeviz-dataSelectionModule-rightBlock">
+									<a id="cubeviz-dataSet-dialogOpener" title="Select elements of interest"> Change</a>
+								</div>
+								<div class="cubeviz-dataSelectionModule-blockSeparator"></div>
+			
+								<!-- slice -->
+								<div id="cubeviz-dataSelectionModule-sliceBlock">
+									<div class="cubeviz-dataSelectionModule-headline">
+										<div style="float: left;">Select dataset filter</div>
+										<div style="float: right; margin-right: 2px;">
+											<i class="icon-question-sign cubeviz-clickable" id="cubeviz-slice-questionmark" title="Why do i should use dataset filter?"></i>
+										</div>
+									</div>
+			
+									<div class="cubeviz-dataSelectionModule-leftBlock">
+										<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/slice2.png" style="width: 16px; margin-left: 8px;" />
+									</div>
+									<div class="cubeviz-dataSelectionModule-middleBlock">
+										<div id="cubeviz-slice-label"></div>
+										<span class="cubeviz-dataSelectionModule-smallDescription" id="cubeviz-slice-description"></span>
+									</div>
+									<div class="cubeviz-dataSelectionModule-rightBlock">
+										<a id="cubeviz-slice-dialogOpener" title="Select dataset filter">Change</a>
+									</div>
+								</div>
+			
+								<!-- visual seperator -->
+								<div class="cubeviz-dataSelectionModule-visualSeparator">
+									<hr />
+								</div>
+			
+								<div class="cubeviz-dataSelectionModule-headline">
+									<div style="float: left;">Select Unit and Measurement</div>
+									<div style="float: right; margin-right: 2px;">
+										<i class="icon-question-sign cubeviz-clickable" id="cubeviz-attributeAndMeasure-questionmark" title="DataSelectionModule_SelectAttributeAndMeasurementIconText"></i>
+									</div>
+								</div>
+								<!-- block containing attribute and measure, if available, otherwise they are hidden -->
+								<div id="cubeviz-dataSelectionModule-attributeAndMeasureBlock">
+									<!-- attribute -->
+									<div id="cubeviz-dataSelectionModule-attributeBlock">
+										<div class="cubeviz-dataSelectionModule-leftBlock">
+											<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/attribute2.png" style="width: 17px; margin-left: 10px;" />
+										</div>
+										<div class="cubeviz-dataSelectionModule-middleBlock">
+											<div id="cubeviz-attribute-label"></div>
+											<div class="cubeviz-dataSelectionModule-smallDescription" id="cubeviz-attribute-description"></div>
+										</div>
+										<div class="cubeviz-dataSelectionModule-rightBlock">
+											<a id="cubeviz-attribute-dialogOpener" title="Unit Selection">Change</a>
+										</div>
+										<div class="cubeviz-dataSelectionModule-blockSeparator"></div>
+									</div>
+									<!-- measure -->
+									<div id="cubeviz-dataSelectionModule-measureBlock">
+										<div class="cubeviz-dataSelectionModule-leftBlock">
+											<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/measure2.png" style="width: 16px; margin-left: 8px;" />
+										</div>
+										<div class="cubeviz-dataSelectionModule-middleBlock">
+											<div id="cubeviz-measure-label"></div>
+											<div class="cubeviz-dataSelectionModule-smallDescription" id="cubeviz-measure-description"></div>
+										</div>
+										<div class="cubeviz-dataSelectionModule-rightBlock">
+											<a id="cubeviz-measure-dialogOpener" title="Measurement Selection">Change</a>
+										</div>
+									</div>
+								</div>
+								<!-- visual seperator -->
+								<div class="cubeviz-dataSelectionModule-visualSeparator">
+									<hr />
+								</div>
+			
+								<div class="cubeviz-dataSelectionModule-headline">
+									<div style="float: left;">Configure the Dimensions</div>
+									<div style="float: right; margin-right: 2px;">
+										<i class="icon-question-sign cubeviz-clickable" id="cubeviz-component-questionmark" title="What is a dimension and why should I select elements belonging to a dimension?"></i>
+									</div>
+								</div>
+			
+								<!-- component section -->
+								<div id="cubviz-component-container">
+									<div id="cubviz-component-listBox"></div>
+								</div>
+			
+								<!-- visual seperator -->
+								<div class="cubeviz-dataSelectionModule-visualSeparator" style="padding-top: 1px;">
+									<hr />
+								</div>
+			
+								<div id="cubeviz-footer-container">
+									<div style="float: left;">
+										<a class="cubeviz-btn" id="cubeviz-footer-permaLinkButton" style="font-size: 12.5px;"> 
+											<i class="icon-pushpin" style="font-size: 11px;"></i> Share
+										</a>
+										<span id="cubeviz-footer-permaLinkMenu">
+											<strong>Use the following Link to share the current output</strong>: 
+											<span id="cubeviz-footer-permaLink"> Link</span>
+										</span>
+									</div>
+									<div style="float: right;">
+										<a class="cubeviz-btn" id="cubeviz-footer-showVisualizationButton" style="font-size: 12.5px;"> 
+											<i class="icon-refresh" style="font-size: 11px;"></i> Update Chart
+										</a>
+									</div>
+								</div>
+							</div>
+			
+							<!-- Will contain all the dynamic created dialog divs later on, so do not remove it! -->
+							<div id="cubeviz-dataSelectionModule-dialogContainer" style="display: none;"></div>
+			
+							<!-- #########
+								 Templates
+			    				 ######### -->
+			
+							<!-- Component-Dimension -->
+							<div id="cubeviz-component-tpl-listBoxItem" style="display: none;">
+								<div class="cubeviz-component-box" id="cubeviz-component-box-[[__cv_uri]]">
+									<div class="cubeviz-dataSelectionModule-leftBlock">
+										<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/dimension.png" style="width: 15px; margin-left: 10px; padding-top: 4px;" /> <br />
+									</div>
+									<div class="cubeviz-dataSelectionModule-middleBlock">
+										<div class="cubeviz-component-dimensionLabel" title="[[__cv_niceLabel]]">[[__cv_shortLabel]]</div>
+										<div class="cubeviz-component-selectedElementsBlock">
+											<span class="cubeviz-component-selectedCount">[[__cv_selectedElementCount]]</span>
+											of [[__cv_elementCount]] Selected
+			 							</div>
+										<div class="cubeviz-dataSelectionModule-smallDescription" title="[[__cv_description]]">[[__cv_shortDescription]]</div>
+									</div>
+									<div class="cubeviz-dataSelectionModule-rightBlock">
+										<a class="cubeviz-component-setupComponentOpener" title="Select elements of interest"> Change</a>
+									</div>
+								</div>
+								<div class="cubeviz-dataSelectionModule-blockSeparator"></div>
+							</div>
+			
+							<!-- Dialog container -->
+							<div id="cubeviz-dataSelectionModule-tpl-dialog" style="display: none;">
+								<div class="cubeviz-dataSelectionModule-dialog" id="cubeviz-dataSelectionModule-dialog-[[__cv_hashedUri]]" title="[[__cv_title]]">
+			
+									<!-- Header -->
+									<div style="float: right">
+										<img class="cubeviz-icon-unsized" src="http://localhost/ontowiki/extensions/cubeviz/public/images/cubevizLogo.png" />
+									</div>
+			
+									<h3 style="margin-top: 0px;">[[__cv_niceLabel]]</h3>
+			
+									<div class="cubeviz-dataSelectionModule-dialog-description" style="clear: both;">[[__cv_description]]</div>
+			
+									<div class="cubeviz-dataSelectionModule-dialog-smallDescription" style="clear: both;">
+										<br />[[__cv_shortDescription]]
+									</div>
+									<br />
+			
+									<!-- Sort buttons -->
+									<div class="cubeviz-dataSelectionModule-dialogSortButtons" style="float: right; vertical-align: middle;">
+										Sort By: <span class="cubeviz-btn"> Alphabet</span> &nbsp; 
+										<span class="cubeviz-btn"> Check Status</span> &nbsp; 
+										<span class="cubeviz-btn" style="display: none;"> Observation Count</span>
+									</div>
+			
+									<!-- Select all / deselect all buttons -->
+									<span class="cubeviz-btn cubeviz-dataSelectionModule-selectAllButton">Select all items</span> 
+									<span class="cubeviz-btn cubeviz-dataSelectionModule-deselectButton">Deselect all items</span>
+			
+									<div style="clear: both; margin-top: 4px;"></div>
+			
+									<!-- Element list -->
+									<ul class="cubeviz-dataSelectionModule-dialogElements"></ul>
+			
+									<!-- Cancel and closeAndUpdate buttons -->
+									<div style="margin-top: 5px; float: right;">
+										<span class="cubeviz-btn cubeviz-dataSelectionModule-cancelBtn">Cancel</span> &nbsp; 
+										<span class="cubeviz-btn cubeviz-dataSelectionModule-closeAndUpdateBtn">
+											<i class="icon-spinner icon-spin cubeviz-dataSelectionModule-closeUpdateSpinner" style="display: none;"></i> &nbsp; 
+											Update Selection
+										</span>
+									</div>
+								</div>
+							</div>
+			
+							<!-- Template for an checkbox-element in the list of the data selection dialog -->
+							<div id="cubeviz-dataSelectionModule-tpl-dialogCheckboxElement" style="display: none;">
+								<li>
+									<input type="checkbox" name="[[__cv_uri]]" /> 
+									<span style="vertical-align: middle;" title="[[__cv_uri2]]"> 
+										<span>[[__cv_niceLabel]]</span>
+									</span>
+								</li>
+							</div>
+			
+							<!-- Template for an radio-element in the list of the data selection dialog -->
+							<div id="cubeviz-dataSelectionModule-tpl-dialogRadioElement" style="display: none;">
+								<li>
+									<input class="[[radioCSSClass]]" name="[[radioName]]" style="vertical-align: middle;" type="radio" value="[[radioValue]]" /> 
+									<span style="vertical-align: middle;" title="[[__cv_uri]]"> 
+										<span>[[__cv_niceLabel]]</span>
+									</span>
+								</li>
+							</div>
+			
+							<!-- Template for a help-dialog containing information about something -->
+							<div id="cubeviz-dataSelectionModule-tpl-helpDialog" style="display: none;">
+								<div id="cubeviz-dataSelectionModule-helpDialog-[[__cv_id]]">
+									<div style="margin-top: 4px; float: right;">
+										<img class="cubeviz-icon-unsized" src="http://cubeviz.aksw.org/extensions/cubeviz/public/images/cubevizLogo.png">
+									</div>
+									<div style="float: left; width: 400px;">
+										<h4>[[__cv_niceLabel]]</h4>
+									</div>
+									<div style="clear: both;">
+										<br /> [[__cv_description]]
+									</div>
+								</div>
+							</div>
+			
+							<!-- ############
+			    				 TRANSLATIONS
+			    				 ############ -->
+			
+							<!-- help dialog for attribute and measure -->
+							<div id="cubeviz-dataSelectionModule-tra-attributeAndMeasureHelpDialogTitle" style="display: none;">
+								Why are there different measurements and units?
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-attributeAndMeasureHelpDialogDescription" style="display: none;">
+								Sometimes a dataset contains different
+								measurement and units. This is the case where a statistical
+								observation is being expressed for different purposes. For
+								instance, a spatial distance between two things can be expressed
+								using centimeter and meter. To improve the comparability of
+								observations the user should determine both the measurement and the
+								unit. Please use the selection dialogue to configure this according
+								to your needs.
+							</div>
+			
+							<!-- attribute dialog -->
+							<div id="cubeviz-dataSelectionModule-tra-attributeDialogTitle" style="display: none;">
+								Unit Selection
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-attributeDialogDescription" style="display: none;">
+								In the following list, different units are
+								available for selection. As the default, CubeViz selects one out of
+								the list automatically, but you can change the selection according
+								to your needs. Please note that you are only allowed to select one
+								of the listed items.
+							</div>
+			
+							<!-- help dialog for component -->
+							<div id="cubeviz-dataSelectionModule-tra-componentDialogMainTitle" style="display: none;">
+								Dimension Element Selection
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-componentDialogDescription" style="display: none;">
+								In the following form, those dimension
+								elements are listed that are used to express the context of the
+								corresponding statistical observations. This is a multiple choice
+								selection, which means that you are able to select a minimum of one
+								and a maximum of all items. Please note that you have to select at
+								least one item. If you select all items it can happen that the
+								server has to respond with a very huge set of data which can can
+								slow down the response and processing time.
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-componentHelpDialogTitle" style="display: none;">
+								What is a dimension and why should I select elements belonging to a dimension?
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-componentHelpDialogDescription" style="display: none;">
+								The selected RDF dataset contains
+								statistical context information of the observations. In a DataCube
+								such contextual information are expressed as dimensions and
+								dimension elements. To select observations of your interest you
+								have to select elements belonging to these dimensions. The
+								available dimensions are available in the box. Below every
+								dimension the amount of selected and available dimension elements
+								is diplayed. To change the slection please use the selection
+								dialogue for each dimension.
+							</div>
+			
+							<!-- help dialog for dataset-->
+							<div id="cubeviz-dataSelectionModule-tra-dataSetDialogTitle" style="display: none;">Dataset Selection</div>
+							<div id="cubeviz-dataSelectionModule-tra-dataSetDialogDescription" style="display: none;">
+								In the following item list, the DataCube
+								datasets available are part of the given dataset. These DataCube
+								datasets are used to fragment the set of statistical data items. In
+								order to visualize a chart using CubeViz, select one of the
+								DataCube datasets below.
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-dataSetHelpDialogTitle" style="display: none;">
+								What is a dataset and why should I select one?
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-dataSetHelpDialogDescription" style="display: none;">
+								The selected RDF dataset contains a
+								subdivision called “DataCube datasets” which are used to group
+								different statistical data items. The structure of a DataCube
+								dataset corresponds to a specific data structure definition. There
+								may be cases where different DataCube datasets share their
+								corresonding DataStructureDefinition. In the selection dialogue you
+								have the option to change the selected DataCube dataset. If you do
+								not select one of the subdivision, CubeViz will select one
+								automatically.
+							</div>
+			
+							<!-- attribute dialog -->
+							<div id="cubeviz-dataSelectionModule-tra-attributeDialogNoAttributeSelectionElement" style="display: none;">
+								Do not use any attribute
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-attributeDialogNoAttributeSelectedLabel" style="display: none;">
+								No attribute selected
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-attributeDialogNoAttributeSelectedDescription" style="display: none;">
+								Attributes available for selection
+							</div>
+			
+							<!-- measure dialog -->
+							<div id="cubeviz-dataSelectionModule-tra-measureDialogTitle" style="display: none;">Measurement Selection</div>
+							<div id="cubeviz-dataSelectionModule-tra-measureDialogDescription" style="display: none;">
+								In the following list, different
+								measurements are available for selection. As the default, CubeViz
+								selects one out of the list automatically, but you can change the
+								selection according to your needs. Please note that you are only
+								allowed to select one of the listed items.
+							</div>
+			
+							<!-- slice dialog -->
+							<div id="cubeviz-dataSelectionModule-tra-sliceDialogTitle" style="display: none;">
+								Dataset filter selection
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-sliceDialogDescription" style="display: none;">
+								A dataset filter set a fix amount of
+								dimension elements. Its purpose is to give you a specific view of
+								the data.
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-sliceDialogNoSliceSelectionElement" style="display: none;">
+								Do not use any slices
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-sliceHelpDialogTitle" style="display: none;">
+								Why do i should use dataset filter?
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-sliceHelpDialogDescription" style="display: none;">
+								A dataset filter set a fix amount of
+								dimension elements. Its purpose is to give you a specific view of
+								the data. In general, the author of the data you see, use slices to
+								show you remarkable observations or interesting facts.
+							</div>
+							<div id="cubeviz-dataSelectionModule-tra-sliceNoSelection" style="display: none;">
+								No dataset filter selected yet
 							</div>
 						</div>
-
-						<div class="cubeviz-dataSelectionModule-leftBlock">
-							<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/slice2.png" style="width: 16px; margin-left: 8px;" />
-						</div>
-						<div class="cubeviz-dataSelectionModule-middleBlock">
-							<div id="cubeviz-slice-label"></div>
-							<span class="cubeviz-dataSelectionModule-smallDescription" id="cubeviz-slice-description"></span>
-						</div>
-						<div class="cubeviz-dataSelectionModule-rightBlock">
-							<a id="cubeviz-slice-dialogOpener" title="Select dataset filter">Change</a>
-						</div>
+						<!-- .window .content -->
 					</div>
-
-					<!-- visual seperator -->
-					<div class="cubeviz-dataSelectionModule-visualSeparator">
-						<hr />
-					</div>
-
-					<div class="cubeviz-dataSelectionModule-headline">
-						<div style="float: left;">Select Unit and Measurement</div>
-						<div style="float: right; margin-right: 2px;">
-							<i class="icon-question-sign cubeviz-clickable" id="cubeviz-attributeAndMeasure-questionmark" title="DataSelectionModule_SelectAttributeAndMeasurementIconText"></i>
-						</div>
-					</div>
-					<!-- block containing attribute and measure, if available, otherwise they are hidden -->
-					<div id="cubeviz-dataSelectionModule-attributeAndMeasureBlock">
-						<!-- attribute -->
-						<div id="cubeviz-dataSelectionModule-attributeBlock">
-							<div class="cubeviz-dataSelectionModule-leftBlock">
-								<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/attribute2.png" style="width: 17px; margin-left: 10px;" />
-							</div>
-							<div class="cubeviz-dataSelectionModule-middleBlock">
-								<div id="cubeviz-attribute-label"></div>
-								<div class="cubeviz-dataSelectionModule-smallDescription" id="cubeviz-attribute-description"></div>
-							</div>
-							<div class="cubeviz-dataSelectionModule-rightBlock">
-								<a id="cubeviz-attribute-dialogOpener" title="Unit Selection">Change</a>
-							</div>
-							<div class="cubeviz-dataSelectionModule-blockSeparator"></div>
-						</div>
-						<!-- measure -->
-						<div id="cubeviz-dataSelectionModule-measureBlock">
-							<div class="cubeviz-dataSelectionModule-leftBlock">
-								<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/measure2.png" style="width: 16px; margin-left: 8px;" />
-							</div>
-							<div class="cubeviz-dataSelectionModule-middleBlock">
-								<div id="cubeviz-measure-label"></div>
-								<div class="cubeviz-dataSelectionModule-smallDescription" id="cubeviz-measure-description"></div>
-							</div>
-							<div class="cubeviz-dataSelectionModule-rightBlock">
-								<a id="cubeviz-measure-dialogOpener" title="Measurement Selection">Change</a>
-							</div>
-						</div>
-					</div>
-					<!-- visual seperator -->
-					<div class="cubeviz-dataSelectionModule-visualSeparator">
-						<hr />
-					</div>
-
-					<div class="cubeviz-dataSelectionModule-headline">
-						<div style="float: left;">Configure the Dimensions</div>
-						<div style="float: right; margin-right: 2px;">
-							<i class="icon-question-sign cubeviz-clickable" id="cubeviz-component-questionmark" title="What is a dimension and why should I select elements belonging to a dimension?"></i>
-						</div>
-					</div>
-
-					<!-- component section -->
-					<div id="cubviz-component-container">
-						<div id="cubviz-component-listBox"></div>
-					</div>
-
-					<!-- visual seperator -->
-					<div class="cubeviz-dataSelectionModule-visualSeparator" style="padding-top: 1px;">
-						<hr />
-					</div>
-
-					<div id="cubeviz-footer-container">
-						<div style="float: left;">
-							<a class="cubeviz-btn" id="cubeviz-footer-permaLinkButton" style="font-size: 12.5px;"> 
-								<i class="icon-pushpin" style="font-size: 11px;"></i> Share
-							</a>
-							<span id="cubeviz-footer-permaLinkMenu">
-								<strong>Use the following Link to share the current output</strong>: 
-								<span id="cubeviz-footer-permaLink"> Link</span>
-							</span>
-						</div>
-						<div style="float: right;">
-							<a class="cubeviz-btn" id="cubeviz-footer-showVisualizationButton" style="font-size: 12.5px;"> 
-								<i class="icon-refresh" style="font-size: 11px;"></i> Update Chart
-							</a>
-						</div>
-					</div>
+					<!-- .slidehelper -->
 				</div>
-
-				<!-- Will contain all the dynamic created dialog divs later on, so do not remove it! -->
-				<div id="cubeviz-dataSelectionModule-dialogContainer" style="display: none;"></div>
-
-				<!-- #########
-					 Templates
-    				 ######### -->
-
-				<!-- Component-Dimension -->
-				<div id="cubeviz-component-tpl-listBoxItem" style="display: none;">
-					<div class="cubeviz-component-box" id="cubeviz-component-box-[[__cv_uri]]">
-						<div class="cubeviz-dataSelectionModule-leftBlock">
-							<img src="http://localhost/ontowiki/extensions/cubeviz/public/images/semicon/dimension.png" style="width: 15px; margin-left: 10px; padding-top: 4px;" /> <br />
-						</div>
-						<div class="cubeviz-dataSelectionModule-middleBlock">
-							<div class="cubeviz-component-dimensionLabel" title="[[__cv_niceLabel]]">[[__cv_shortLabel]]</div>
-							<div class="cubeviz-component-selectedElementsBlock">
-								<span class="cubeviz-component-selectedCount">[[__cv_selectedElementCount]]</span>
-								of [[__cv_elementCount]] Selected
- 							</div>
-							<div class="cubeviz-dataSelectionModule-smallDescription" title="[[__cv_description]]">[[__cv_shortDescription]]</div>
-						</div>
-						<div class="cubeviz-dataSelectionModule-rightBlock">
-							<a class="cubeviz-component-setupComponentOpener" title="Select elements of interest"> Change</a>
-						</div>
-					</div>
-					<div class="cubeviz-dataSelectionModule-blockSeparator"></div>
-				</div>
-
-				<!-- Dialog container -->
-				<div id="cubeviz-dataSelectionModule-tpl-dialog" style="display: none;">
-					<div class="cubeviz-dataSelectionModule-dialog" id="cubeviz-dataSelectionModule-dialog-[[__cv_hashedUri]]" title="[[__cv_title]]">
-
-						<!-- Header -->
-						<div style="float: right">
-							<img class="cubeviz-icon-unsized" src="http://localhost/ontowiki/extensions/cubeviz/public/images/cubevizLogo.png" />
-						</div>
-
-						<h3 style="margin-top: 0px;">[[__cv_niceLabel]]</h3>
-
-						<div class="cubeviz-dataSelectionModule-dialog-description" style="clear: both;">[[__cv_description]]</div>
-
-						<div class="cubeviz-dataSelectionModule-dialog-smallDescription" style="clear: both;">
-							<br />[[__cv_shortDescription]]
-						</div>
-						<br />
-
-						<!-- Sort buttons -->
-						<div class="cubeviz-dataSelectionModule-dialogSortButtons" style="float: right; vertical-align: middle;">
-							Sort By: <span class="cubeviz-btn"> Alphabet</span> &nbsp; 
-							<span class="cubeviz-btn"> Check Status</span> &nbsp; 
-							<span class="cubeviz-btn" style="display: none;"> Observation Count</span>
-						</div>
-
-						<!-- Select all / deselect all buttons -->
-						<span class="cubeviz-btn cubeviz-dataSelectionModule-selectAllButton">Select all items</span> 
-						<span class="cubeviz-btn cubeviz-dataSelectionModule-deselectButton">Deselect all items</span>
-
-						<div style="clear: both; margin-top: 4px;"></div>
-
-						<!-- Element list -->
-						<ul class="cubeviz-dataSelectionModule-dialogElements"></ul>
-
-						<!-- Cancel and closeAndUpdate buttons -->
-						<div style="margin-top: 5px; float: right;">
-							<span class="cubeviz-btn cubeviz-dataSelectionModule-cancelBtn">Cancel</span> &nbsp; 
-							<span class="cubeviz-btn cubeviz-dataSelectionModule-closeAndUpdateBtn">
-								<i class="icon-spinner icon-spin cubeviz-dataSelectionModule-closeUpdateSpinner" style="display: none;"></i> &nbsp; 
-								Update Selection
-							</span>
-						</div>
-					</div>
-				</div>
-
-				<!-- Template for an checkbox-element in the list of the data selection dialog -->
-				<div id="cubeviz-dataSelectionModule-tpl-dialogCheckboxElement" style="display: none;">
-					<li>
-						<input type="checkbox" name="[[__cv_uri]]" /> 
-						<span style="vertical-align: middle;" title="[[__cv_uri2]]"> 
-							<span>[[__cv_niceLabel]]</span>
-						</span>
-					</li>
-				</div>
-
-				<!-- Template for an radio-element in the list of the data selection dialog -->
-				<div id="cubeviz-dataSelectionModule-tpl-dialogRadioElement" style="display: none;">
-					<li>
-						<input class="[[radioCSSClass]]" name="[[radioName]]" style="vertical-align: middle;" type="radio" value="[[radioValue]]" /> 
-						<span style="vertical-align: middle;" title="[[__cv_uri]]"> 
-							<span>[[__cv_niceLabel]]</span>
-						</span>
-					</li>
-				</div>
-
-				<!-- Template for a help-dialog containing information about something -->
-				<div id="cubeviz-dataSelectionModule-tpl-helpDialog" style="display: none;">
-					<div id="cubeviz-dataSelectionModule-helpDialog-[[__cv_id]]">
-						<div style="margin-top: 4px; float: right;">
-							<img class="cubeviz-icon-unsized" src="http://cubeviz.aksw.org/extensions/cubeviz/public/images/cubevizLogo.png">
-						</div>
-						<div style="float: left; width: 400px;">
-							<h4>[[__cv_niceLabel]]</h4>
-						</div>
-						<div style="clear: both;">
-							<br /> [[__cv_description]]
-						</div>
-					</div>
-				</div>
-
-				<!-- ############
-    				 TRANSLATIONS
-    				 ############ -->
-
-				<!-- help dialog for attribute and measure -->
-				<div id="cubeviz-dataSelectionModule-tra-attributeAndMeasureHelpDialogTitle" style="display: none;">
-					Why are there different measurements and units?
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-attributeAndMeasureHelpDialogDescription" style="display: none;">
-					Sometimes a dataset contains different
-					measurement and units. This is the case where a statistical
-					observation is being expressed for different purposes. For
-					instance, a spatial distance between two things can be expressed
-					using centimeter and meter. To improve the comparability of
-					observations the user should determine both the measurement and the
-					unit. Please use the selection dialogue to configure this according
-					to your needs.
-				</div>
-
-				<!-- attribute dialog -->
-				<div id="cubeviz-dataSelectionModule-tra-attributeDialogTitle" style="display: none;">
-					Unit Selection
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-attributeDialogDescription" style="display: none;">
-					In the following list, different units are
-					available for selection. As the default, CubeViz selects one out of
-					the list automatically, but you can change the selection according
-					to your needs. Please note that you are only allowed to select one
-					of the listed items.
-				</div>
-
-				<!-- help dialog for component -->
-				<div id="cubeviz-dataSelectionModule-tra-componentDialogMainTitle" style="display: none;">
-					Dimension Element Selection
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-componentDialogDescription" style="display: none;">
-					In the following form, those dimension
-					elements are listed that are used to express the context of the
-					corresponding statistical observations. This is a multiple choice
-					selection, which means that you are able to select a minimum of one
-					and a maximum of all items. Please note that you have to select at
-					least one item. If you select all items it can happen that the
-					server has to respond with a very huge set of data which can can
-					slow down the response and processing time.
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-componentHelpDialogTitle" style="display: none;">
-					What is a dimension and why should I select elements belonging to a dimension?
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-componentHelpDialogDescription" style="display: none;">
-					The selected RDF dataset contains
-					statistical context information of the observations. In a DataCube
-					such contextual information are expressed as dimensions and
-					dimension elements. To select observations of your interest you
-					have to select elements belonging to these dimensions. The
-					available dimensions are available in the box. Below every
-					dimension the amount of selected and available dimension elements
-					is diplayed. To change the slection please use the selection
-					dialogue for each dimension.
-				</div>
-
-				<!-- help dialog for dataset-->
-				<div id="cubeviz-dataSelectionModule-tra-dataSetDialogTitle" style="display: none;">Dataset Selection</div>
-				<div id="cubeviz-dataSelectionModule-tra-dataSetDialogDescription" style="display: none;">
-					In the following item list, the DataCube
-					datasets available are part of the given dataset. These DataCube
-					datasets are used to fragment the set of statistical data items. In
-					order to visualize a chart using CubeViz, select one of the
-					DataCube datasets below.
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-dataSetHelpDialogTitle" style="display: none;">
-					What is a dataset and why should I select one?
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-dataSetHelpDialogDescription" style="display: none;">
-					The selected RDF dataset contains a
-					subdivision called “DataCube datasets” which are used to group
-					different statistical data items. The structure of a DataCube
-					dataset corresponds to a specific data structure definition. There
-					may be cases where different DataCube datasets share their
-					corresonding DataStructureDefinition. In the selection dialogue you
-					have the option to change the selected DataCube dataset. If you do
-					not select one of the subdivision, CubeViz will select one
-					automatically.
-				</div>
-
-				<!-- attribute dialog -->
-				<div id="cubeviz-dataSelectionModule-tra-attributeDialogNoAttributeSelectionElement" style="display: none;">
-					Do not use any attribute
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-attributeDialogNoAttributeSelectedLabel" style="display: none;">
-					No attribute selected
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-attributeDialogNoAttributeSelectedDescription" style="display: none;">
-					Attributes available for selection
-				</div>
-
-				<!-- measure dialog -->
-				<div id="cubeviz-dataSelectionModule-tra-measureDialogTitle" style="display: none;">Measurement Selection</div>
-				<div id="cubeviz-dataSelectionModule-tra-measureDialogDescription" style="display: none;">
-					In the following list, different
-					measurements are available for selection. As the default, CubeViz
-					selects one out of the list automatically, but you can change the
-					selection according to your needs. Please note that you are only
-					allowed to select one of the listed items.
-				</div>
-
-				<!-- slice dialog -->
-				<div id="cubeviz-dataSelectionModule-tra-sliceDialogTitle" style="display: none;">
-					Dataset filter selection
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-sliceDialogDescription" style="display: none;">
-					A dataset filter set a fix amount of
-					dimension elements. Its purpose is to give you a specific view of
-					the data.
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-sliceDialogNoSliceSelectionElement" style="display: none;">
-					Do not use any slices
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-sliceHelpDialogTitle" style="display: none;">
-					Why do i should use dataset filter?
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-sliceHelpDialogDescription" style="display: none;">
-					A dataset filter set a fix amount of
-					dimension elements. Its purpose is to give you a specific view of
-					the data. In general, the author of the data you see, use slices to
-					show you remarkable observations or interesting facts.
-				</div>
-				<div id="cubeviz-dataSelectionModule-tra-sliceNoSelection" style="display: none;">
-					No dataset filter selected yet
-				</div>
+				<!-- .window -->
+				<!-- removed block 4: Knowledge bases -->
+				<!-- removed block 5: Navigation -->
+				<!-- removed block 6: Static links & Login -->
 			</div>
-			<!-- .window .content -->
+			<!-- .section-sidewindows -->
+			<div style="clear:both; float:right;">&nbsp</div>
 		</div>
-		<!-- .slidehelper -->
 	</div>
-	<!-- .window -->
-	<!-- removed block 4: Knowledge bases -->
-	<!-- removed block 5: Navigation -->
-	<!-- removed block 6: Static links & Login -->
-
 </div>
-<!-- .section-sidewindows -->
-<!-- Rendered in 1463 ms using 29 SPARQL queries. -->
