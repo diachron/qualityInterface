@@ -1,7 +1,7 @@
 <ul id="tab-container" class="nav nav-tabs" role="tablist">
-	<li class="active"><a href="#detail">Detail</a></li>
+	<li class="active"><a>Detail</a></li>
 	<li><a href="Statistics">Statistics</a></li>
-	<li><a href="#assessment">Assessment</a></li>
+	<li><a href="Assessment">Assessment</a></li>
 </ul>
 <div class="tab-content">
 	<div class="tab-pane active" id="detail">
@@ -48,40 +48,7 @@
 			</div>
 			<div style="width:100%; margin-top:15px;">
 				<div id="lst-datasets" class="list-group">
-					<a href="#" class="list-group-item">
-				    	<h4 class="list-group-item-heading">A collection of LREC2014 submissions</h4>
-				    	<p class="list-group-item-text">
-				    		The submission is the pointer to papers and to authors.
-				    	</p>
-				    	<p class="list-group-item-text lst-datasets-actions">
-			    			<button type="button" class="btn btn-primary btn-xs">Application/rdf+xml</button>&nbsp;&nbsp;
-							<button type="button" class="btn btn-success btn-xs">Quality metadata/rdf+xml</button>
-				    	</p>
-				  	</a>
-				  	<a href="#" class="list-group-item">
-				    	<h4 class="list-group-item-heading">RDF Licenses</h4>
-				    	<p class="list-group-item-text">
-				    		This small dataset contains licenses (suitable for general works, data, etc.) expressed as RDF.
-				    	</p>
-				    	<p class="list-group-item-text lst-datasets-actions">
-			    			<button type="button" class="btn btn-primary btn-xs">Application/turtle</button>&nbsp;&nbsp;
-							<button type="button" class="btn btn-success btn-xs">Quality metadata/turtle</button>
-				    	</p>
-				  	</a>
-				  	<a href="#" class="list-group-item">
-				    	<h4 class="list-group-item-heading">DisGeNET</h4>
-				    	<p class="list-group-item-text">
-				    		Linked Data version of DisGeNET, which is a Resource Description Framework (RDF) representation of a vast 
-				    		database integrating gene-disease associations from several...
-				    	</p>
-				    	<p class="list-group-item-text lst-datasets-actions">
-			    			<button type="button" class="btn btn-primary btn-xs">Application/turtle</button>&nbsp;&nbsp;
-							<button type="button" class="btn btn-success btn-xs">Quality metadata/turtle</button>&nbsp;&nbsp;
-							<button type="button" class="btn btn-info btn-xs">api/sparql</button>&nbsp;&nbsp;
-							<button type="button" class="btn btn-warning btn-xs">rdf/void</button>&nbsp;&nbsp;
-							<button type="button" class="btn btn-default btn-xs">metadata/schema</button>
-				    	</p>
-				  	</a>
+					<span>Please select a Category, Dimension and Metric whereby the DataSets are to be ranked.</span>
 				</div>
 			</div>
 		</div>
@@ -93,6 +60,21 @@
 	<div class="tab-pane" id="assessment">
 		Lots of assessment
 	</div>
+	
+	<!-- Templates -->
+	<div id="tmplDataSetItem" style="display:none">
+		<a class="list-group-item">
+	    	<h4 class="list-group-item-heading">[[name]]</h4>
+	    	<p class="list-group-item-text">
+	    		[[description]]
+	    	</p>
+	    	<p class="list-group-item-text lst-datasets-actions">
+    			<button type="button" class="btn btn-primary btn-xs" style="display:none;">Application/rdf+xml</button>&nbsp;&nbsp;
+				<button type="button" class="btn btn-danger btn-xs" onclick="visualizeDataSet('[[dataset_uri]]')">Visualise Quality</button>
+	    	</p>
+	  	</a>
+	</div>
+	<!-- .Templates -->
 </div>
 
 <script type="text/javascript">
@@ -114,7 +96,7 @@
 	// creates the UI elements representing them
 	function loadAvailableMetrics() {
 		// Retrieve existing metrics from the Quality knowledgebase
-		var arrMetrics = lodDataAccess.selectMetrics();
+		var arrMetrics = lodDataAccess.selectComputedMetrics();
 
 		var btnListCategories = $("#btnListCategories");
 		var btnListDimensions = $("#btnListDimensions");
@@ -158,7 +140,7 @@
 			curDimension.metrics.push({ name: curMetric.metric_name, uri: curMetric.metric_uri, selected: false });
 
 			// Create a DOM button corresponding to each metric (hidden by default)
-			btnListMetrics.append("<button type='button' id='btnSel_" + curMetric.category_name + "_" + curMetric.dimension_name + "_" + curMetric.metric_name + "' style='display:none' class='btn btn-default' onclick='toggleMetric(\"" + curMetric.category_name + "\", \"" + curMetric.dimension_uri + "\", \"" + curMetric.metric_uri + "\")'>" + curMetric.metric_name + "</button>");
+			btnListMetrics.append("<button type='button' id='btnSel_" + curMetric.category_name + "_" + curMetric.dimension_name + "_" + curMetric.metric_name + "' style='display:none' class='btn btn-default' onclick='toggleMetric.call(this, \"" + curMetric.category_name + "\", \"" + curMetric.dimension_uri + "\", \"" + curMetric.metric_uri + "\")'>" + curMetric.metric_label + "</button>");
 		}
 	}
 
@@ -222,7 +204,34 @@
 	// Toggle the selected status of a metric, given its URI and the names  
 	// of the dimension and category it belongs to 
 	function toggleMetric(categoryName, dimensionURI, metricURI) {
-		// TODO: Implement
+		
+		// Clean the contents of the container holding the list of DataSets
+		var dsContainer = $("#lst-datasets").empty();
+		
+		// Set all other metrics as inactive (only one metric can be selected at a time)
+		$(this).siblings().removeClass("active");
+
+		// Retrieve datasets for which the metric has been computed
+		var arrDataSets = lodDataAccess.selectDataSetsByMetric(metricURI); 
+
+		// Build DOM element representing the DataSet, from template...
+		var strTmplDataSet = $("#tmplDataSetItem").html();
+
+		for(var i = 0; i < arrDataSets.length; i++) {
+			var curDataSetHtml = strTmplDataSet
+									.replace("[[name]]", arrDataSets[i]["dataset_label"])
+									.replace("[[description]]", arrDataSets[i]["dataset_comment"])
+									.replace("[[dataset_uri]]", arrDataSets[i]["dataset_uri"]);
+			
+			// and append each DOM element to the container 
+			dsContainer.append(curDataSetHtml);
+		}
+	}
+
+	// Show the Cube visualization for the DataSet specified as parameter
+	function visualizeDataSet(dataSetURI) {
+		// Redirect to Statistics page, specifying the URL of the DataSet to be visualized as target model
+		window.location = "Statistics.html?m=" + encodeURIComponent(dataSetURI);
 	}
 
 </script>

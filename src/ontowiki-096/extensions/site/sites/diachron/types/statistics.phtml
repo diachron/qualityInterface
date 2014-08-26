@@ -8,12 +8,13 @@
 	bodyClass = bodyClass + " is-processing";
 	// process changes
 	body.setAttribute("class", bodyClass, 0);
+
 </script>
 
 <ul id="tab-container" class="nav nav-tabs" role="tablist">
 	<li><a href="Dashboard">Detail</a></li>
 	<li class="active"><a href="Statistics">Statistics</a></li>
-	<li><a href="#assessment">Assessment</a></li>
+	<li><a href="Assessment">Assessment</a></li>
 </ul>
 <div class="tab-content">
 	<div class="tab-pane active" style="position:relative; top:-8px;">
@@ -22,19 +23,7 @@
 				<div class="window">
 					<h1 class="title">Visualization for Dataset Quality Graph</h1>
 					<div class="slidehelper">
-						<div class="content">
-							<script type="text/javascript">				
-								// ui settings to adapt user interface
-								cubeVizApp._.backend.uiSettings.useDataSetInsteadOfModel = true;
-							    
-								cubeVizApp
-									.add("View_IndexAction_Header", "#cubeviz-index-headerDialogBox")
-									.add("View_IndexAction_Visualization", "#cubeviz-index-visualization")
-									.add("View_IndexAction_VisualizationSelector", "#cubeviz-visualizationselector-menuItems")
-									.add("View_IndexAction_Legend", "")
-									.add("View_IndexAction_ExportArea", "");
-							</script>
-			
+						<div class="content">			
 							<div style="margin-left: 6px; margin-top: 10px;">
 			
 								<!-- Visualization selector -->
@@ -210,6 +199,17 @@
 					<div class="slidehelper">
 						<div class="content">
 							<script type="text/javascript">
+							
+								// ui settings to adapt user interface
+								cubeVizApp._.backend.uiSettings.useDataSetInsteadOfModel = true;
+															    
+								cubeVizApp
+									.add("View_IndexAction_Header", "#cubeviz-index-headerDialogBox")
+									.add("View_IndexAction_Visualization", "#cubeviz-index-visualization")
+									.add("View_IndexAction_VisualizationSelector", "#cubeviz-visualizationselector-menuItems")
+									.add("View_IndexAction_Legend", "")
+									.add("View_IndexAction_ExportArea", "");
+							
 							    cubeVizApp._.backend.uiParts.dataselectionModule.isLoaded = true;
 							    
 							    cubeVizApp

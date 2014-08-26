@@ -1,3 +1,5 @@
+-- Get all categoris defined in the daQ/dqm ontologies
+
 PREFIX dqm: <http://www.diachron-fp7.eu/dqm#>
 PREFIX daq: <http://purl.org/eis/vocab/daq#>
 
@@ -5,19 +7,144 @@ SELECT DISTINCT ?category_name
 WHERE
 { ?category_name rdfs:subClassOf daq:Category }
 
+
+-- Get all the metrics defined in the daQ/dqm ontologies and their respective dimensions and categories
+
 PREFIX dqm: <http://www.diachron-fp7.eu/dqm#>
 PREFIX daq: <http://purl.org/eis/vocab/daq#>
 
 SELECT ?category_uri ?dimension_uri ?metric_uri
 WHERE
 {
-	?has_dimension_metric rdfs:subPropertyOf daq:hasMetric.
+	?has_dimension_metric rdfs:subPropertyOf daq:hasMetric .
 	?has_dimension_metric rdfs:domain ?dimension_uri .
 	?has_dimension_metric rdfs:range ?metric_uri .
 	?has_category_dim rdfs:range ?dimension_uri .
-	?has_category_dim rdfs:subPropertyOf daq:hasDimension.
+	?has_category_dim rdfs:subPropertyOf daq:hasDimension .
 	?has_category_dim rdfs:domain ?category_uri .
 }
 ORDER BY ASC(?category_uri) ASC(?dimension_uri) ASC(?metric_uri) 
 
 LIMIT 500
+
+
+
+PREFIX qg: <urn:8d12fdef-4d8a-48b3-bdd4-b9571d27fdc6>
+PREFIX daq: <http://purl.org/eis/vocab/daq#>
+PREFIX sysont:<http://ns.ontowiki.net/SysOnt/>
+
+SELECT ?ds
+WHERE { ?ds a sysont:Model }
+
+LIMIT 500
+
+
+
+-- Load DataSets having a Quality Graph
+
+PREFIX daq: <http://purl.org/eis/vocab/daq#>
+
+SELECT ?ds ?dsLabel ?dsComment
+WHERE 
+{
+	?ds a daq:QualityGraph ;
+		rdfs:label ?dsLabel .
+	OPTIONAL { ?ds rdfs:comment ?dsComment } .
+}
+
+LIMIT 500
+
+
+-- Get the value of a given metric, as computed on all available datasets
+
+PREFIX daq: <http://purl.org/eis/vocab/daq#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+SELECT ?ds ?dsLabel ?metric ?revision ?date ?val  
+WHERE 
+{
+	?obs a qb:Observation ;
+		daq:computedOn ?revision ; 
+		daq:dateComputed ?date ; 
+		daq:metric ?metric ; 
+		daq:value ?val .
+	?ds a daq:QualityGraph ;
+		rdfs:label ?dsLabel .
+	FILTER ( REGEX(?metric, "urn:cda9a3d7-f459-4dc1-b206-04294f71a13e", "i") )
+}
+ORDER BY ASC(?val)  
+
+LIMIT 500
+
+
+-- Get all the metrics computed on at least a dataset and their respective dimensions and categories
+
+PREFIX daq: <http://purl.org/eis/vocab/daq#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+SELECT DISTINCT ?category_uri ?category_name ?dimension_uri ?dimension_name ?metric_uri ?metric_name   
+WHERE 
+{
+	?metric_internal_id a ?metric_uri .
+	?metric_uri rdfs:subClassOf daq:Metric .
+	?has_dimension_metric rdfs:range ?metric_uri .
+	?has_dimension_metric rdfs:domain ?dimension_uri .
+	?has_category_dim rdfs:range ?dimension_uri .
+	?has_category_dim rdfs:domain ?category_uri .
+	OPTIONAL { ?category_uri rdfs:label ?category_name } .
+	OPTIONAL { ?dimension_uri rdfs:label ?dimension_name } .
+	OPTIONAL { ?metric_uri rdfs:label ?metric_name } .
+}
+ORDER BY ASC(?category_name) ASC(?dimension_name) ASC(?metric_name) 
+
+LIMIT 500
+
+
+-- Get the value of a given metric, as computed on all available datasets
+
+PREFIX daq: <http://purl.org/eis/vocab/daq#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+SELECT DISTINCT ?data_set ?dataset_label ?dataset_comment ?revision ?metric ?val  
+WHERE 
+{
+	?data_set a daq:QualityGraph ;
+		rdfs:label ?dataset_label ;
+		rdfs:comment ?dataset_comment .
+	GRAPH ?data_set {
+		?obs qb:dataSet ?data_set ; 
+			 daq:metric ?metric ;
+			 daq:computedOn ?revision ;
+			 daq:value ?val .
+	}
+	FILTER ( REGEX(?metric, "urn:cda9a3d7-f459-4dc1-b206-04294f71a13e", "i") )
+}
+ORDER BY ASC(?val) 
+
+LIMIT 1000
+
+
+-- Get the value of a given metric, as computed on all available datasets... for latest revision????
+
+PREFIX daq: <http://purl.org/eis/vocab/daq#>
+PREFIX qb: <http://purl.org/linked-data/cube#>
+
+SELECT DISTINCT ?data_set ?dataset_label ?dataset_comment ?date_computed ?metric_uri ?val  
+WHERE 
+{
+	?data_set a daq:QualityGraph ;
+		rdfs:label ?dataset_label ;
+		rdfs:comment ?dataset_comment .
+	GRAPH ?data_set {
+		?obs qb:dataSet ?data_set ; 
+			 daq:metric ?metric_uid ;
+			 daq:dateComputed ?date_computed ;
+			 daq:value ?val .
+		?metric_uid a ?metric_uri . 
+	}
+	FILTER ( REGEX(?metric_uri, "http://www.diachron-fp7.eu/dqm#ScalabilityOfDataSourceMetric", "i") )
+}
+ORDER BY ASC(?daq:dateComputed) 
+
+LIMIT 1000
+

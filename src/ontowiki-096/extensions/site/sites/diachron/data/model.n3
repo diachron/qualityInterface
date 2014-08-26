@@ -51,6 +51,11 @@ You can find further information about the extension on its [github page](https:
           site:content "Quality statistics."^^sysont:Markdown ;
           site:template "statistics" .
 
+<Assessment> a foaf:Document ;
+          rdfs:label "Assessment"@en, "Bewertung"@de ;
+          site:content "Quality Assessment."^^sysont:Markdown ;
+          site:template "assessment" .
+
 foaf:Document site:classTemplate "document" .
 
 void:rootResource a site:TemplateOption .

@@ -106,13 +106,13 @@ $templateData = $this->templateData;
 			_.mixin(_.str.exports());    //]]>
 		</script>
 		<script type="text/javascript" src="<?php echo $this->systemConfig->staticUrlBase ?>extensions/cubeviz/ChartConfig.js"></script>
-		<script type="text/javascript" src="<?php echo $baseJavascriptPath?>Main-production.js"></script>
+		<script type="text/javascript" src="<?php echo $baseJavascriptPath?>CubeVizMain.js"></script>
 		<script type="text/javascript" src="<?php echo $baseJavascriptPath?>libraries/javascriptStats-1.0.1.js"></script>
 		<script type="text/javascript" src="<?php echo $baseJavascriptPath?>libraries/highcharts.js"></script>
 		<script type="text/javascript" src="<?php echo $baseJavascriptPath?>libraries/highcharts-more.js"></script>
 		<!-- head scripts -->
     	<?php echo $this->headScript() ?>
-    	
+		
     <?php } else { ?>
 
     	<link type="text/css" href="<?php echo $this->baseUri ?>/css/jquery-ui-themes/smoothness/jquery-ui.min.css" rel="stylesheet" />
