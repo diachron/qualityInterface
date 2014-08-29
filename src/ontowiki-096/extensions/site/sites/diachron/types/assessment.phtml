@@ -1,16 +1,197 @@
 <ul id="tab-container" class="nav nav-tabs" role="tablist">
-	<li><a href="Detail">Detail</a></li>
+	<li><a href="Detail">Dashboard</a></li>
 	<li><a href="Statistics">Statistics</a></li>
 	<li class="active"><a>Assessment</a></li>
 </ul>
 <div class="tab-content">
 	<div class="tab-pane active" id="detail">
-		<div class="hero-unit">
-		<h1><?php echo $this->title ?></h1>
-		<?php
-		    // uses default content properties
-		    echo $this->literal(array('tag' => 'div', 'class' => 'content'));
-		?>
+		<div class="tab-pane active" id="detail">
+			<div class="layout-col" style="width:350px;">
+				<h4>Step 1</h4>
+				<div class="panel panel-default controls-bar">
+					<div class="panel panel-default">
+					  <div class="panel-heading">Available Datasets</div>
+					  <div class="panel-body">
+					  	<div id="btnListDataSets" class="btn-group-vertical btn-group-sm btn-list" data-toggle="buttons">
+						</div>
+					  </div>
+					</div>
+					<span style="margin-left:4px;">Add Dataset</span>
+					<div class="panel panel-default">
+					  <div class="panel-body">
+					  	<input id="uriAddDataSet" type="text" class="form-control" placeholder="Dataset URI"/>
+					  	<button type="button" class="btn btn-primary" style="margin:3px 0px 0px 0px;" onclick="addDataSet();">Add</button>
+					  	<p class="note">Please input URIs which will resolve into RDF/XML files when negotiating for application/rdf+xml</p>
+					  </div>
+					</div>
+				</div>
+			</div>
+			<div class="layout-col" style="min-width:350px; max-width:700px">
+				<h4>Step 2</h4>
+				<div class="panel panel-default controls-bar">
+					<div class="panel panel-default">
+					  <div class="panel-heading">Metrics</div>
+					  <div class="panel-body">
+					  	<div id="btnListMetrics" class="btn-group-vertical btn-group-sm btn-list" data-toggle="buttons">
+						</div>
+					  </div>
+					</div>
+				</div>
+			</div>
+			<div style="float:left; width:355px; max-width:705px;">
+				<div class="layout-col" style="min-width:350px; max-width:700px">
+					<h4>Step 3</h4>
+					<div class="panel panel-default controls-bar">
+						<div class="panel panel-default">
+						  <div class="panel-heading">Metrics</div>
+						  <div class="panel-body">
+						  	<div style="float:left; width:25px;">
+						  		<input id="chkGenQualityReport" type="checkbox"/>
+						  	</div>
+						  	<div style="float:left; width:270px;">
+						  		<label for="chkGenQualityReport" style="font-weight:normal;">Produce Quality Problem Report after assessment</label>
+						  	</div>
+						  	<div style="clear:both; height:0px;">&nbsp;</div>
+						  </div>
+						</div>
+					</div>
+				</div>
+				<div class="layout-col" style="min-width:350px; max-width:700px">
+					<h4>Step 4</h4>
+					<div class="panel panel-default controls-bar">
+						<div class="panel panel-default">
+						  <div class="panel-heading">Metrics</div>
+						  <div class="panel-body" style="text-align:center;">
+					  		<button type="button" class="btn btn-danger" style="margin:3px 0px 0px 0px;" onclick="launchAssessment()">Assess Datasets</button>
+					  		<p class="note" style="text-align:left; width:100%;">
+					  			Please note that the assessment process might take a longer time than expected
+					  		</p>
+						  </div>
+						</div>
+					</div>
+				</div>				
+			</div>
+			<div class="layout-clear"></div>
 		</div>
 	</div>
 </div>
+
+<!-- Assessment progress modal -->
+<div class="modal fade" id="modalAsmProgress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Dataset Assessment in Progress</h4>
+      </div>
+      <div class="modal-body">
+      	Running assessment process, please wait...
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- .Assessment progress modal -->
+<script type="text/javascript">
+
+	// Map containing the Datasets to be assessed (key: Dataset URI, value: is selected to be assessed)
+	var arrAvailDataSets = [
+				{ uri: "http://localhost/exampledatasets/efo-2.34.rdf", label: "EFO-2.34" },
+				{ uri: "http://localhost/exampledatasets/efo-2.35.rdf", label: "EFO-2.35" },
+				{ uri: "http://localhost/exampledatasets/efo-2.36.rdf", label: "EFO-2.36" },
+				{ uri: "http://localhost/exampledatasets/efo-2.37.rdf", label: "EFO-2.37" },
+				{ uri: "http://localhost/exampledatasets/efo-2.38.rdf", label: "EFO-2.38" },
+				{ uri: "http://localhost/exampledatasets/efo-2.39.rdf", label: "EFO-2.39" },
+				{ uri: "http://localhost/exampledatasets/efo-2.41.rdf", label: "EFO-2.41" },
+				{ uri: "http://localhost/exampledatasets/efo-2.42.rdf", label: "EFO-2.42" },
+				{ uri: "http://localhost/exampledatasets/efo-2.43.rdf", label: "EFO-2.43" },
+				{ uri: "http://localhost/exampledatasets/efo-2.44.rdf", label: "EFO-2.44" }				
+			];
+
+	var arrAvailMetrics = [
+				{ uri: "eu.diachron.qualitymetrics.accessibility.performance.DataSourceScalability", name: "Data Source Scalability" },
+				{ uri: "eu.diachron.qualitymetrics.intrinsic.accuracy.DefinedOntologyAuthor", name: "Defined Ontology Author" },
+				{ uri: "eu.diachron.qualitymetrics.intrinsic.accuracy.SynonymUsage", name: "Synonym Usage" },
+				{ uri: "eu.diachron.qualitymetrics.intrinsic.accuracy.POBODefinitionUsage", name: "POBO Definition Usage" },
+				{ uri: "eu.diachron.qualitymetrics.intrinsic.consistency.EntitiesAsMembersOfDisjointClasses", name: "Entities as Members of Disjoint Classes" },
+				{ uri: "eu.diachron.qualitymetrics.intrinsic.consistency.HomogeneousDatatypes", name: "Homogeneous Datatypes" },
+				{ uri: "eu.diachron.qualitymetrics.intrinsic.consistency.ObsoleteConceptsInOntology", name: "Obsolete Concepts in Ontology" },
+				{ uri: "eu.diachron.qualitymetrics.intrinsic.conciseness.OntologyVersioningConciseness", name: "Ontology Versioning Conciseness" },
+				{ uri: "eu.diachron.qualitymetrics.dynamicity.timeliness.TimelinessOfResource", name: "Timeliness of Resource" },
+				{ uri: "eu.diachron.qualitymetrics.representational.understandability.HumanReadableLabelling", name: "Human Readable Labelling" },
+				{ uri: "eu.diachron.qualitymetrics.representational.understandability.LowBlankNodeUsage", name: "Low Blank Node Usage" },
+				{ uri: "eu.diachron.qualitymetrics.contextual.amountofdata.AmountOfTriples", name: "Amount of Triples" }
+		    ];
+
+	// Document ready handler
+	$(function () {
+
+		// Prepare controls
+		$("#modalAsmProgress").modal({ show: false, backdrop: 'static', keyboard: false });
+
+		renderAvailDataSets();
+		renderAvailMetrics();
+	})
+	
+
+	function addDataSet() {
+		
+		// Get the URI of the dataset to be added
+		var jqInDataSetURI = $("#uriAddDataSet");
+		var uriAddDataSet = jqInDataSetURI.val();
+		
+		if($.trim(uriAddDataSet) !== '') {
+
+			// Create new dataset object and add it to the list of available datasets
+			var objAvailDataSet = { uri: uriAddDataSet, label: uriAddDataSet };
+			arrAvailDataSets.push(objAvailDataSet);
+			
+			// Render button to select dataset
+			renderAvailDataSet(objAvailDataSet);
+		}
+
+		// Reset previously written URI
+		jqInDataSetURI.val('');
+	}
+
+	function renderAvailDataSets() {
+
+		// Get container of the dataset selection buttons and clear it up
+		var btnListDataSets = $("#btnListDataSets");
+		btnListDataSets.empty();
+
+		// Add the datasets to the list of buttons that are in the list of available datasets
+		for(var i = 0; i < arrAvailDataSets.length; i++) {
+			// Create a DOM button corresponding to the newly added category
+			renderAvailDataSet(arrAvailDataSets[i]); 			
+		}
+	}
+
+	function renderAvailDataSet(objAvailDataSet) {
+		
+		var btnListDataSets = $("#btnListDataSets");
+		btnListDataSets.append("<button type='button' id='" + objAvailDataSet.uri + "' class='btn btn-default'>" + objAvailDataSet.label + "</button>");
+	}
+
+	function renderAvailMetrics() {
+
+		// Get container of the metric selection buttons and clear it up
+		var btnListMetrics = $("#btnListMetrics");
+		btnListMetrics.empty();
+
+		// Add the metrics to the list of buttons that are in the list of available metrics
+		for(var i = 0; i < arrAvailMetrics.length; i++) {
+			// Create a DOM button corresponding to the newly added category
+			btnListMetrics.append("<button type='button' id='" + arrAvailMetrics[i].uri + "' class='btn btn-default'>" + arrAvailMetrics[i].name + "</button>");
+		}
+	}
+
+	function launchAssessment() {
+
+		$("#modalAsmProgress").modal('show');
+
+		// Build request		
+	}
+
+</script>

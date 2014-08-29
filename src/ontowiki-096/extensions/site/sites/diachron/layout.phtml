@@ -125,6 +125,12 @@ $templateData = $this->templateData;
 		<script type="text/javascript" src="<?php echo $this->baseUri ?>/js/lod-access.js"></script>
 
     <?php } ?>
+    
+    <?php if($templateData['title'] === 'Assessment') { ?>
+
+    	<script type="text/javascript" src="<?php echo $this->baseUri ?>/js/quality-assessment.js"></script>
+
+    <?php } ?>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -144,7 +150,9 @@ $templateData = $this->templateData;
 </head>
 
 <body<?php foreach ($this->namespaces as $prefix => $ns): ?><?php echo ' xmlns:' . $prefix . '="' . $ns . '"' ?><?php endforeach; ?>>
-
+	<div class="page-header">
+		<img src="<?php echo $this->baseUri ?>/img/diachron-logo-web.png" style="margin:0px 50px 0px 0px;"/>		
+	</div>
 	<div class="container">
 	    <?php echo $this->renderx(); ?>
 	    <!-- Example row of columns for a Feed -->

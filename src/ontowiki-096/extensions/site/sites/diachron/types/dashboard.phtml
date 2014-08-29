@@ -54,12 +54,6 @@
 		</div>
 		<div class="layout-clear"></div>
 	</div>
-	<div class="tab-pane" id="stats">
-		Lots of stats
-	</div>
-	<div class="tab-pane" id="assessment">
-		Lots of assessment
-	</div>
 	
 	<!-- Templates -->
 	<div id="tmplDataSetItem" style="display:none">
@@ -140,7 +134,7 @@
 			curDimension.metrics.push({ name: curMetric.metric_name, uri: curMetric.metric_uri, selected: false });
 
 			// Create a DOM button corresponding to each metric (hidden by default)
-			btnListMetrics.append("<button type='button' id='btnSel_" + curMetric.category_name + "_" + curMetric.dimension_name + "_" + curMetric.metric_name + "' style='display:none' class='btn btn-default' onclick='toggleMetric.call(this, \"" + curMetric.category_name + "\", \"" + curMetric.dimension_uri + "\", \"" + curMetric.metric_uri + "\")'>" + curMetric.metric_label + "</button>");
+			btnListMetrics.append("<button type='button' id='btnSel_" + curMetric.category_name + "_" + curMetric.dimension_name + "_" + curMetric.metric_name + "' style='display:none' class='btn btn-default' metricUri='" + curMetric.metric_uri + "' onclick='toggleMetric.call(this, \"" + curMetric.category_name + "\", \"" + curMetric.dimension_uri + "\", \"" + curMetric.metric_uri + "\")'>" + curMetric.metric_label + "</button>");
 		}
 	}
 
@@ -204,13 +198,20 @@
 	// Toggle the selected status of a metric, given its URI and the names  
 	// of the dimension and category it belongs to 
 	function toggleMetric(categoryName, dimensionURI, metricURI) {
+
+		// TODO: Allow several metrics to be selected
+		// Build the list of currently selected metrics
+// 		var btnListMetrics = $("#btnListMetrics");
+// 		var arrSelMetrics = $("button.active", btnListMetrics).map( function(elemIx, domElem) {
+// 			return $(domElem).attr("metricUri");
+// 		}).get();
+
+		// Set all other metrics as inactive (only one metric can be selected at a time)
+		$(this).siblings().removeClass("active");
 		
 		// Clean the contents of the container holding the list of DataSets
 		var dsContainer = $("#lst-datasets").empty();
 		
-		// Set all other metrics as inactive (only one metric can be selected at a time)
-		$(this).siblings().removeClass("active");
-
 		// Retrieve datasets for which the metric has been computed
 		var arrDataSets = lodDataAccess.selectDataSetsByMetric(metricURI); 
 

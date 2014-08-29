@@ -1,3 +1,9 @@
+.page-header {
+	margin: auto;
+	border-style: none;
+	text-align: right;
+}
+
 .nav-tabs {
 	margin-top: 10px;
 }
@@ -46,4 +52,10 @@
 
 span {
 	color: #555555;
+}
+
+.note {
+	font-size: 0.9em;
+	color: #555555;
+	margin: 3px 0px 0px 2px;
 }
