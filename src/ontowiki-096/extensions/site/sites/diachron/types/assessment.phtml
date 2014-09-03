@@ -6,70 +6,80 @@
 <div class="tab-content">
 	<div class="tab-pane active" id="detail">
 		<div class="tab-pane active" id="detail">
-			<div class="layout-col" style="width:350px;">
+			<div class="layout-col" style="width: 350px;">
 				<h4>Step 1</h4>
 				<div class="panel panel-default controls-bar">
 					<div class="panel panel-default">
-					  <div class="panel-heading">Available Datasets</div>
-					  <div class="panel-body">
-					  	<div id="btnListDataSets" class="btn-group-vertical btn-group-sm btn-list" data-toggle="buttons">
+						<div class="panel-heading">Available Datasets</div>
+						<div class="panel-body">
+							<div id="btnListDataSets"
+								class="btn-group-vertical btn-group-sm btn-list"
+								data-toggle="buttons"></div>
 						</div>
-					  </div>
 					</div>
-					<span style="margin-left:4px;">Add Dataset</span>
+					<span style="margin-left: 4px;">Add Dataset</span>
 					<div class="panel panel-default">
-					  <div class="panel-body">
-					  	<input id="uriAddDataSet" type="text" class="form-control" placeholder="Dataset URI"/>
-					  	<button type="button" class="btn btn-primary" style="margin:3px 0px 0px 0px;" onclick="addDataSet();">Add</button>
-					  	<p class="note">Please input URIs which will resolve into RDF/XML files when negotiating for application/rdf+xml</p>
-					  </div>
+						<div class="panel-body">
+							<input id="uriAddDataSet" type="text" class="form-control"
+								placeholder="Dataset URI" />
+							<button type="button" class="btn btn-primary"
+								style="margin: 3px 0px 0px 0px;" onclick="addDataSet();">Add</button>
+							<p class="note">Please input URIs which will resolve into RDF/XML
+								files when negotiating for application/rdf+xml</p>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="layout-col" style="min-width:350px; max-width:700px">
+			<div class="layout-col" style="min-width: 350px; max-width: 700px">
 				<h4>Step 2</h4>
 				<div class="panel panel-default controls-bar">
 					<div class="panel panel-default">
-					  <div class="panel-heading">Metrics</div>
-					  <div class="panel-body">
-					  	<div id="btnListMetrics" class="btn-group-vertical btn-group-sm btn-list" data-toggle="buttons">
+						<div class="panel-heading">Metrics</div>
+						<div class="panel-body">
+							<div id="btnListMetrics"
+								class="btn-group-vertical btn-group-sm btn-list"
+								data-toggle="buttons"></div>
 						</div>
-					  </div>
 					</div>
 				</div>
 			</div>
-			<div style="float:left; width:355px; max-width:705px;">
-				<div class="layout-col" style="min-width:350px; max-width:700px">
+			<div style="float: left; width: 355px; max-width: 705px;">
+				<div class="layout-col" style="min-width: 350px; max-width: 700px">
 					<h4>Step 3</h4>
 					<div class="panel panel-default controls-bar">
 						<div class="panel panel-default">
-						  <div class="panel-heading">Metrics</div>
-						  <div class="panel-body">
-						  	<div style="float:left; width:25px;">
-						  		<input id="chkGenQualityReport" type="checkbox"/>
-						  	</div>
-						  	<div style="float:left; width:270px;">
-						  		<label for="chkGenQualityReport" style="font-weight:normal;">Produce Quality Problem Report after assessment</label>
-						  	</div>
-						  	<div style="clear:both; height:0px;">&nbsp;</div>
-						  </div>
+							<div class="panel-heading">Metrics</div>
+							<div class="panel-body">
+								<div style="float: left; width: 25px;">
+									<input id="chkGenQualityReport" type="checkbox"
+										value="genQualityReport" />
+								</div>
+								<div style="float: left; width: 270px;">
+									<label for="chkGenQualityReport" style="font-weight: normal;">
+										Produce Quality Problem Report after assessment
+									</label>
+								</div>
+								<div style="clear: both; height: 0px;">&nbsp;</div>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="layout-col" style="min-width:350px; max-width:700px">
+				<div class="layout-col" style="min-width: 350px; max-width: 700px">
 					<h4>Step 4</h4>
 					<div class="panel panel-default controls-bar">
 						<div class="panel panel-default">
-						  <div class="panel-heading">Metrics</div>
-						  <div class="panel-body" style="text-align:center;">
-					  		<button type="button" class="btn btn-danger" style="margin:3px 0px 0px 0px;" onclick="launchAssessment()">Assess Datasets</button>
-					  		<p class="note" style="text-align:left; width:100%;">
-					  			Please note that the assessment process might take a longer time than expected
-					  		</p>
-						  </div>
+							<div class="panel-heading">Metrics</div>
+							<div class="panel-body" style="text-align: center;">
+								<button type="button" class="btn btn-danger" style="margin: 3px 0px 0px 0px;" onclick="launchAssessment()">
+									Assess Datasets
+								</button>
+								<p class="note" style="text-align: left; width: 100%;">
+									Please note that the assessment process might take a longer time than expected
+								</p>
+							</div>
 						</div>
 					</div>
-				</div>				
+				</div>
 			</div>
 			<div class="layout-clear"></div>
 		</div>
@@ -77,20 +87,26 @@
 </div>
 
 <!-- Assessment progress modal -->
-<div class="modal fade" id="modalAsmProgress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Dataset Assessment in Progress</h4>
-      </div>
-      <div class="modal-body">
-      	Running assessment process, please wait...
-      </div>
-      <div class="modal-footer">
-      </div>
-    </div>
-  </div>
+<div class="modal fade" id="modalAsmProgress" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					Dataset Assessment in Progress
+				</h4>
+			</div>
+			<div class="modal-body">
+				<span id="msgCurrentStatus"></span>
+				<ul id="lstProcessedDataSets" class="notifications-list"></ul>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
 </div>
 <!-- .Assessment progress modal -->
 <script type="text/javascript">
@@ -189,9 +205,52 @@
 
 	function launchAssessment() {
 
+		var btnListMetrics = $("#btnListMetrics");
+		var btnListDataSets = $("#btnListDataSets"); 
+
+		$("#msgCurrentStatus").empty();
+		$("#lstProcessedDataSets").empty();
 		$("#modalAsmProgress").modal('show');
 
-		// Build request		
+		// Build request parameters
+		var arrSelMetrics = $("button.active", btnListMetrics).map( function(elemIx, domElem) {
+ 			return $(domElem).attr("id");
+		} ).get();
+
+		var arrSelDataSets = $("button.active", btnListDataSets).map( function(elemIx, domElem) {
+ 			return $(domElem).attr("id");
+		} ).get();
+
+		var genQualityReport = ($("#chkGenQualityReport:checked").val() === "genQualityReport");
+
+		// Set event handlers
+		qualityAsmEngine.onBeginDataSetProcessing = handle_beginDataSetProcessing;
+		qualityAsmEngine.onProcessError = handle_errorProcessing;
+		qualityAsmEngine.onDataSetProcessed = handle_datasetProcessed;
+		qualityAsmEngine.onProcessCompleted = handle_processCompleted;
+
+		var result = qualityAsmEngine.launchQualityAssessment(arrSelDataSets, arrSelMetrics, genQualityReport);
+
+		// Check if an error occurred when validating the quality assessment request, e.g. invalid arguments
+		if(result.outcome && result.outcome === "VALIDATION_ERROR") {
+			$("#msgCurrentStatus").html("Invalid quality assessment request. Please select at least a Dataset and a Metric.");
+		}
+	}
+
+	function handle_beginDataSetProcessing(dataSetURI, metricConfigId) {
+		$("#msgCurrentStatus").html("Running Quality Assessment process, please wait...");
+	}
+
+	function handle_errorProcessing(dataSetURI, metricConfigId, error) {
+		$("#lstProcessedDataSets").append("<li>Error processing dataset: " + dataSetURI + ", Metric config. Id: " + metricConfigId + "</li>");
+	}
+
+	function handle_datasetProcessed(dataSetURI, metricConfigId, result) {
+		$("#lstProcessedDataSets").append("<li>Dataset successfully processed: " + dataSetURI + ", Metric config. Id: " + metricConfigId + "</li>");
+	}
+
+	function handle_processCompleted(dataSetURI) {
+		$("#msgCurrentStatus").html("Quality assessment completed successfully!");
 	}
 
 </script>

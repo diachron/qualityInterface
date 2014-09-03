@@ -1221,4 +1221,56 @@ class ServiceController extends Zend_Controller_Action
 
         return $result;
     }
+    
+    /**
+     * Serves as a proxy for the invocation of web services hosted in a different domain (or port) via Ajax calls.
+     * It's necessary because of the "same domain policy" imposed on XHR-Requests
+     * HTTP GET/POST parameters.
+     */
+    public function qualityproxyAction() {
+    	
+    	// service controller needs no view renderer
+    	$this->_helper->viewRenderer->setNoRender();
+    	// disable layout for Ajax requests
+    	$this->_helper->layout()->disableLayout();
+    	$response = $this->getResponse();
+    	 
+    	
+    	// Send POST request to Quality Assessment service
+    	$quality_service_url = 'http://localhost:8080/luzzu/compute_quality';
+    	$http_request_timeout_secs = 1800;
+
+    	// Set all the parameters received into the forwarded request
+    	$data = array();
+    	
+    	foreach(array_keys($this->_request->getParams()) as $param_key) {
+    	
+    		if($param_key !== 'action' && $param_key !== 'controller') {
+    			$data[$param_key] = $this->_request->getParam($param_key);
+    		}
+    	}
+
+    	// use key 'http' even if the request is to be sent through https://...
+    	$options = array(
+    			'http' => array(
+    					'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+    					'method'  => 'POST',
+    					'content' => http_build_query($data),
+    					'timeout' => $http_request_timeout_secs
+    			),
+    	);
+    	
+    	try {
+	    	$context  = stream_context_create($options);
+	    	$result = file_get_contents($quality_service_url, false, $context);
+	    	
+	    	// send the response
+	    	$response->setHeader('Content-Type', 'application/json');
+	    	$response->setBody($result);
+    	} catch(Exceptio $e) {
+    		$response->setHeader('Content-Type', 'application/json');
+    		$response->setBody('{ \"Outcome\": \"ERROR\", \"ErrorMessage\": \"Proxy error, '. $e->getMessage() .'\" }');
+    	}
+    }
+
 }

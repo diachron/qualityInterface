@@ -245,7 +245,6 @@ var lodDataAccess = (function() {
 		jQuery.ajax(DATASOURCE_URL, {
 				type: "POST",
 				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-				accepts: "application/json",
 				dataType: "json",
 				async: false,
 				cache: false,

@@ -59,3 +59,9 @@ span {
 	color: #555555;
 	margin: 3px 0px 0px 2px;
 }
+
+.notifications-list {
+	font-size: 0.8em;
+	color: #555555;
+	margin: 5px 0px 0px 5px;
+}
