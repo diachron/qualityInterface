@@ -1,0 +1,45 @@
+#!/bin/bash
+# Author: Santiago Londoño (londono@informatik.uni-bonn.de)
+#
+# /etc/init.d/virtuoso
+#
+### BEGIN INIT INFO
+# Provides:          virtuoso
+# Required-Start:    network
+# Should-Start:      $null
+# Required-Stop:     xdm
+# Should-Stop:	     $null
+# Default-Start:     3 5
+# Default-Stop:      0 1 2 6
+# Short-Description: Runs Virtuoso OpenSource.
+# Description:       Runs Virtuoso OpenSource for the OntoWiki database.
+### END INIT INFO
+
+pname=virtuoso
+: ${config_db:=/usr/share/virtuoso-opensource-6.1.8/var/lib/virtuoso/ontowiki/virtuoso.ini}
+: ${pidfile:=/usr/share/virtuoso-opensource-6.1.8/var/run/virtuoso.pid}
+
+test -s /etc/rc.status && . /etc/rc.status && rc_reset
+
+case "$1" in
+   start)
+      echo "Starting Virtuoso...";
+      /usr/share/virtuoso-opensource-6.1.8/bin/virtuoso-t -c $config_db
+      echo "Done";
+   ;;
+   stop)
+      echo "Stopping virtuoso...";
+      pkill -TERM virtuoso-t
+   ;;
+   restart)
+      $0 stop
+      $0 start
+      rc_status
+      ;;
+   *)
+      echo "Usage $0 (start|stop|restart)"
+      exit 1; 
+      ;;
+esac 
+
+rc_exit
