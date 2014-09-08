@@ -7,10 +7,12 @@
 var lodDataAccess = (function() {
 	
 	// Private attributes, implemented by mean of closures
+	var LOGIN_URL = "../application/login";
 	var DATASOURCE_URL = "../queries/editor";
 	var DQM_BASE_URI = "http://www.diachron-fp7.eu/dqm#";
 	var DAQ_BASE_URI = "http://purl.org/eis/vocab/daq#";
 	var CUBE_BASE_URI = "http://purl.org/linked-data/cube#";
+	var DC_ELEMENTS_URI = "http://purl.org/dc/elements/1.1/"
 
 	// Module instance, public attributes and methods
 	var thisObj = {};
@@ -22,7 +24,8 @@ var lodDataAccess = (function() {
 				"PREFIX daq: <" + DAQ_BASE_URI + ">\n" +
 				"SELECT DISTINCT ?category_uri " + 
 				"FROM <" + DQM_BASE_URI + "> WHERE " +
-				"{ ?category_uri rdfs:subClassOf daq:Category } ";
+				"{ ?category_uri rdfs:subClassOf daq:Category } " + 
+				"LIMIT 1000";
 		
 		var arrResultBinds = runSparqlQuery(DQM_BASE_URI, sparqlQuery);
 		// Array to collect the results of the query, will be also the return value of this method
@@ -61,7 +64,8 @@ var lodDataAccess = (function() {
 					"?has_category_dim rdfs:subPropertyOf daq:hasDimension. " +
 					"?has_category_dim rdfs:domain ?category_uri . " +
 			"} " +
-			"ORDER BY ASC(?category_uri) ASC(?dimension_uri) ASC(?metric_uri) ";
+			"ORDER BY ASC(?category_uri) ASC(?dimension_uri) ASC(?metric_uri) " +
+			"LIMIT 1000";
 		
 		var arrResultBinds = runSparqlQuery(DQM_BASE_URI, sparqlQuery);
 		// Array to collect the results of the query, will be also the return value of this method
@@ -110,7 +114,8 @@ var lodDataAccess = (function() {
 					"OPTIONAL { ?dimension_uri rdfs:label ?dimension_name } ." + 
 					"OPTIONAL { ?metric_uri rdfs:label ?metric_name } ." + 
 			"} " +
-			"ORDER BY ASC(?category_name) ASC(?dimension_name) ASC(?metric_name) ";
+			"ORDER BY ASC(?category_name) ASC(?dimension_name) ASC(?metric_name) " + 
+			"LIMIT 1000";
 		
 		var arrResultBinds = runSparqlQuery(null, sparqlQuery,  "all");
 		// Array to collect the results of the query, will be also the return value of this method
@@ -153,6 +158,7 @@ var lodDataAccess = (function() {
 	thisObj.selectDataSetsByMetric = function(metricUri) {
 		var sparqlQuery = "PREFIX daq: <" + DAQ_BASE_URI + "> " +
 			"PREFIX qb: <" + CUBE_BASE_URI + "> " + 
+			"PREFIX dc: <" + DC_ELEMENTS_URI + "> " + 
 			"SELECT DISTINCT ?data_set_uri ?dataset_label ?dataset_comment ?metric_uri ?date_computed ?metric_value " +
 			"WHERE " +
 			"{ " +
@@ -162,13 +168,14 @@ var lodDataAccess = (function() {
 					"GRAPH ?data_set_uri { " + 
 					"	?obs qb:dataSet ?data_set_uri ; " + 
 					"		daq:metric ?metric_uid ; " +
-					"		daq:dateComputed ?date_computed ; "	+
 					"		daq:value ?metric_value . " +
+					"	OPTIONAL { ?obs dc:date ?date_computed } . "	+
 					"	?metric_uid a ?metric_uri . }" + 
 					"FILTER ( REGEX(?metric_uri, \"" + metricUri + "\") ) " + 
 			"} " + 
-			"ORDER BY ASC(?metric_value) ";
-		
+			"ORDER BY ASC(?metric_value) " +
+			"LIMIT 1000";
+				
 		var arrResultBinds = runSparqlQuery(null, sparqlQuery,  "all");
 		// Object used as a map, to store the rankings of several revisions of a single dataset. Map key: dataset URI
 		var mapDataSetRankings = {};
@@ -270,6 +277,24 @@ var lodDataAccess = (function() {
 		return results;
 	};
 	
+	// Authenticate and initiate session in OntoWiki
+	var logIntoOntowiki = function() {
+		
+		jQuery.ajax(LOGIN_URL, {
+			type: "POST",
+			contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+			async: false,
+			data: { 
+				logintype: "locallogin", 
+    			password: "dba", 
+    			username: "dba"
+			},
+			error: function(jqXHR, errorMsg, ex) {
+				errorHandler(errorMsg, ex);
+			},
+		});
+	}
+	
 	// Extracts the name of an element (resource) of the dqm ontology given its whole URI
 	var extractNameFromURI = function(dqmElementURI) {
 		return dqmElementURI.substring(dqmElementURI.lastIndexOf("dqm#") + 4, dqmElementURI.length);
@@ -280,6 +305,9 @@ var lodDataAccess = (function() {
 	var errorHandler = function(errorMsg, exception) {
 		alert("ERROR: " + errorMsg + " (Exception: " + exception + ")"); 
 	};
+	
+	// Some queries require to be logged into OntoWiki. TODO: think about a better place to login, handle expired session
+	logIntoOntowiki();
 	
 	// Return module singlenton (view module pattern)
 	return thisObj;
